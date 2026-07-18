@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/ECommerceStoreBFF.API/ECommerceStoreBFF.API.csproj" />
+  <Project Path="src/ECommerceStoreBFF.Appliaction/ECommerceStoreBFF.Appliaction.csproj" />
+</Solution>
