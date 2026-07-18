@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="src/ECommerceStoreBFF.API/ECommerceStoreBFF.API.csproj" />
-  <Project Path="src/ECommerceStoreBFF.Appliaction/ECommerceStoreBFF.Appliaction.csproj" />
+  <Project Path="src/ECommerceStoreBFF.Application/ECommerceStoreBFF.Application.csproj" Id="77236159-7927-4ab9-8754-a976a4178b00" />
+  <Project Path="src/ECommerceStoreBFF.Infrastructure/ECommerceStoreBFF.Infrastructure.csproj" Id="2d92ce25-742a-439d-9867-c2c95b3ebb70" />
 </Solution>
