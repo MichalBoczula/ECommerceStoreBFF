@@ -1,19 +1,25 @@
-using Scalar.AspNetCore; 
+using Scalar.AspNetCore;
+using ECommerceStoreBFF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddInfrastructureServices();
 builder.Services.AddOpenApi();
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 var app = builder.Build();
 
-app.MapOpenApi("swagger/v1/swagger.json");
-
-app.MapScalarApiReference(options =>
+if (app.Environment.IsDevelopment())
 {
-    options.WithTitle("ECommerce API")
-           .WithTheme(ScalarTheme.DeepSpace)
-           .WithOpenApiRoutePattern("/swagger/v1/swagger.json");
-});
+    app.MapOpenApi("swagger/v1/swagger.json");
+    app.MapScalarApiReference(options =>
+    {
+        options.WithTitle("ECommerce API")
+               .WithTheme(ScalarTheme.DeepSpace)
+               .WithOpenApiRoutePattern("/swagger/v1/swagger.json");
+    });
+}
 
 var summaries = new[]
 {
@@ -34,6 +40,8 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
+app.MapReverseProxy();
 
 app.Run();
 
