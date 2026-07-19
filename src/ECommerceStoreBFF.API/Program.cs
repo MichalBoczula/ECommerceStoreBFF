@@ -6,46 +6,43 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureServices();
 builder.Services.AddOpenApi();
 builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+       .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.MapOpenApi("swagger/v1/swagger.json");
+app.MapScalarApiReference(options =>
 {
-    app.MapOpenApi("swagger/v1/swagger.json");
-    app.MapScalarApiReference(options =>
+    options.WithTitle("ECommerce BFF API")
+            .WithTheme(ScalarTheme.DeepSpace)
+            .WithOpenApiRoutePattern("/swagger/v1/swagger.json");
+});
+
+app.MapGet("/api/dashboard", async (
+    ECommerceStoreBFF.Infrastructure.Generated.Users.UsersApiClient userClient) =>
+{
+    try
     {
-        options.WithTitle("ECommerce API")
-               .WithTheme(ScalarTheme.DeepSpace)
-               .WithOpenApiRoutePattern("/swagger/v1/swagger.json");
-    });
-}
+        var userTask = userClient.Documentation.Validations.GetAsync();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+        await Task.WhenAll(userTask);
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
+        var user = userTask.Result;
 
-    return forecast;
+        return Results.Ok(user);
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"BFF Orchestration Error: {ex.Message}");
+    }
 })
-.WithName("GetWeatherForecast");
+.WithName("GetDashboardData")
+.AddOpenApiOperationTransformer((operation, context, ct) =>
+{
+    operation.Summary = "Fetches dashboard data for the web UI.";
+    return Task.CompletedTask;
+});
 
 app.MapReverseProxy();
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
