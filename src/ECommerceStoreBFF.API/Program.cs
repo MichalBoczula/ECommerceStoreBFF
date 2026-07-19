@@ -1,16 +1,19 @@
+using Scalar.AspNetCore; 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.MapOpenApi("swagger/v1/swagger.json");
+
+app.MapScalarApiReference(options =>
 {
-    app.MapOpenApi();
-}
+    options.WithTitle("ECommerce API")
+           .WithTheme(ScalarTheme.DeepSpace)
+           .WithOpenApiRoutePattern("/swagger/v1/swagger.json");
+});
 
 var summaries = new[]
 {
@@ -27,6 +30,7 @@ app.MapGet("/weatherforecast", () =>
             summaries[Random.Shared.Next(summaries.Length)]
         ))
         .ToArray();
+
     return forecast;
 })
 .WithName("GetWeatherForecast");
