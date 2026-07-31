@@ -1,5 +1,10 @@
 <Solution>
-  <Project Path="src/ECommerceStoreBFF.API/ECommerceStoreBFF.API.csproj" />
-  <Project Path="src/ECommerceStoreBFF.Application/ECommerceStoreBFF.Application.csproj" Id="77236159-7927-4ab9-8754-a976a4178b00" />
-  <Project Path="src/ECommerceStoreBFF.Infrastructure/ECommerceStoreBFF.Infrastructure.csproj" Id="2d92ce25-742a-439d-9867-c2c95b3ebb70" />
+  <Folder Name="/src/">
+    <Project Path="src/ECommerceStoreBFF.API/ECommerceStoreBFF.API.csproj" />
+    <Project Path="src/ECommerceStoreBFF.Application/ECommerceStoreBFF.Application.csproj" Id="77236159-7927-4ab9-8754-a976a4178b00" />
+    <Project Path="src/ECommerceStoreBFF.Infrastructure/ECommerceStoreBFF.Infrastructure.csproj" Id="2d92ce25-742a-439d-9867-c2c95b3ebb70" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/ECommerceStoreBFF.IntegrationTests/ECommerceStoreBFF.IntegrationTests.csproj" Id="a720a4f6-bcb3-466b-8e84-a1c7cd33e920" />
+  </Folder>
 </Solution>

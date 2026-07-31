@@ -1,4 +1,5 @@
-﻿using ECommerceStoreBFF.Infrastructure.Generated.Products;
+﻿using ECommerceStoreBFF.Infrastructure.Generated.Orders;
+using ECommerceStoreBFF.Infrastructure.Generated.Products;
 using ECommerceStoreBFF.Infrastructure.Generated.Users;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,19 @@ public static class DependencyInjection
         {
             client.BaseAddress = new Uri(bffBaseUrl);
         }).AddTypedClient((httpClient, sp) =>
-            new UsersApiClient(new HttpClientRequestAdapter(authProvider, httpClient: httpClient)));
+        {
+            var adapter = new HttpClientRequestAdapter(authProvider, httpClient: httpClient);
+            return new UsersApiClient(adapter);
+        });
+
+        services.AddHttpClient<OrdersApiClient>(client =>
+        {
+            client.BaseAddress = new Uri(bffBaseUrl);
+        }).AddTypedClient((httpClient, sp) =>
+        {
+            var adapter = new HttpClientRequestAdapter(authProvider, httpClient: httpClient);
+            return new OrdersApiClient(adapter);
+        });
 
         return services;
     }
