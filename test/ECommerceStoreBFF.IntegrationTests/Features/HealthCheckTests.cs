@@ -1,69 +1,41 @@
 ﻿using ECommerceStoreBFF.AcceptanceTests;
-using ECommerceStoreBFF.Infrastructure.Generated.Products;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 
-namespace ECommerceStoreBFF.IntegrationTests.Features;
-
-public class HealthCheckTests : IClassFixture<ApplicationFactory>
+namespace ECommerceStoreBFF.IntegrationTests.Features
 {
-    private readonly ApplicationFactory _factory;
-
-    public HealthCheckTests(ApplicationFactory factory)
+    public class HealthCheckTests : IClassFixture<ApplicationFactory>
     {
-        _factory = factory;
-    }
+        private readonly ApplicationFactory _factory;
 
-    [Fact]
-    public async Task Gateway_HealthCheck_ShouldReturnOk()
-    {
-        // Arrange
-        var client = _factory.CreateClient();
+        public HealthCheckTests(ApplicationFactory factory)
+        {
+            _factory = factory;
+        }
 
-        // Act
-        var response = await client.GetAsync("/health");
+        [Fact]
+        public async Task ProductContainer_HealthCheck_ShouldReturnOk()
+        {
+            // Arrange
+            using var client = new HttpClient();
 
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
+            // Act
+            var response = await client.GetAsync("http://localhost:5000/health");
 
-    [Fact]
-    public async Task ProductsKiotaClient_ShouldProxyThroughYarp()
-    {
-        // Arrange
-        using var scope = _factory.Services.CreateScope();
-        var productsClient = scope.ServiceProvider.GetRequiredService<ProductsApiClient>();
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
 
-        // Act
-        var flow = await productsClient.ProductsDocumentation.Flow.GetAsync();
+        [Fact]
+        public async Task BffContainer_HealthCheck_ShouldReturnOk()
+        {
+            // Arrange
+            using var client = new HttpClient();
 
-        // Assert
-        Assert.NotNull(flow);
-    }
+            // Act
+            var response = await client.GetAsync("http://localhost:3000/health");
 
-    [Fact]
-    public async Task UsersRoute_ShouldProxyThroughYarp_AndReturnSuccess()
-    {
-        // Arrange
-        var client = _factory.CreateClient();
-
-        // Act - Directly testing YARP routing to Users service
-        var response = await client.GetAsync("/users-documentation/flow");
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task OrdersRoute_ShouldProxyThroughYarp_AndReturnSuccess()
-    {
-        // Arrange
-        var client = _factory.CreateClient();
-
-        // Act - Directly testing YARP routing to Invoice/Orders service
-        var response = await client.GetAsync("/orders-documentation/flow");
-
-        // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
     }
 }

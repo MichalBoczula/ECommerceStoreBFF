@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ECommerceStoreBFF.API\ECommerceStoreBFF.API.csproj" />
     <ProjectReference Include="..\..\src\ECommerceStoreBFF.Application\ECommerceStoreBFF.Application.csproj" />
     <ProjectReference Include="..\..\src\ECommerceStoreBFF.Infrastructure\ECommerceStoreBFF.Infrastructure.csproj" />
   </ItemGroup>

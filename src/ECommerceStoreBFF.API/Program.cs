@@ -4,10 +4,15 @@ using ECommerceStoreBFF.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
 builder.Services.AddReverseProxy()
        .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
+
+app.MapHealthChecks("/health");
 
 app.MapScalarApiReference("scalar/products", options =>
 {
@@ -40,4 +45,5 @@ app.Use(async (context, next) =>
 });
 
 app.MapReverseProxy();
+
 app.Run();
