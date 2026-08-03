@@ -39,6 +39,19 @@ namespace ECommerceStoreBFF.IntegrationTests.Features
         }
 
         [Fact]
+        public async Task InvoiceContainer_HealthCheck_ShouldReturnOk()
+        {
+            // Arrange
+            using var client = new HttpClient();
+
+            // Act
+            var response = await client.GetAsync("http://localhost:7000/health");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
         public async Task BffContainer_HealthCheck_ShouldReturnOk()
         {
             // Arrange

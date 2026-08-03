@@ -20,6 +20,7 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     private IContainer? _productCatalogApiContainer;
     private IContainer? _usersApiContainer;
+    private IContainer? _invoiceApiContainer;
     private IContainer? _bffContainer;
 
     public ApplicationFactory()
@@ -55,8 +56,8 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
             {
                 ["GatewaySettings:BaseUrl"] = "http://localhost",
                 ["ReverseProxy:Clusters:products-cluster:Destinations:destination1:Address"] = "http://localhost:5000",
-
-                ["ReverseProxy:Clusters:users-cluster:Destinations:destination1:Address"] = "http://localhost:6500"
+                ["ReverseProxy:Clusters:users-cluster:Destinations:destination1:Address"] = "http://localhost:6500",
+                ["ReverseProxy:Clusters:orders-cluster:Destinations:destination1:Address"] = "http://localhost:7000"
             };
 
             config.AddInMemoryCollection(overrides);
@@ -85,21 +86,40 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
             .Build();
 
         _usersApiContainer = new ContainerBuilder("ecommercestoreusersapi:latest")
-             .WithNetwork(_network)
-             .WithNetworkAliases("users-api")
-             .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
-             .WithEnvironment("ASPNETCORE_URLS", "http://+:8080")
-             .WithEnvironment("MongoDbSettings__ConnectionString", "mongodb://admin:admin123@compose-mongodb:27017/?authSource=admin&directConnection=true")
-             .WithEnvironment("MongoDbSettings__DatabaseName", "ecommerce-store-users-db-test")
-             .WithEnvironment("MongoDbSettings__CustomerCollectionName", "customers")
-             .WithEnvironment("MongoDbSettings__CustomersHistoryCollectionName", "customers-history")
-             .WithEnvironment("MongoDbSettings__AdminCollectionName", "admins")
-             .WithEnvironment("MongoDbSettings__AdminsHistoryCollectionName", "admins-history")
-             .WithPortBinding(6500, 8080)
-             .WithWaitStrategy(Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(r => r.ForPort(8080).ForPath("/health")))
-             .Build();
+            .WithNetwork(_network)
+            .WithNetworkAliases("users-api")
+            .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
+            .WithEnvironment("ASPNETCORE_URLS", "http://+:8080")
+            .WithEnvironment("MongoDbSettings__ConnectionString", "mongodb://admin:admin123@compose-mongodb:27017/?authSource=admin&directConnection=true")
+            .WithEnvironment("MongoDbSettings__DatabaseName", "ecommerce-store-users-db-test")
+            .WithEnvironment("MongoDbSettings__CustomerCollectionName", "customers")
+            .WithEnvironment("MongoDbSettings__CustomersHistoryCollectionName", "customers-history")
+            .WithEnvironment("MongoDbSettings__AdminCollectionName", "admins")
+            .WithEnvironment("MongoDbSettings__AdminsHistoryCollectionName", "admins-history")
+            .WithPortBinding(6500, 8080)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(r => r.ForPort(8080).ForPath("/health")))
+            .Build();
 
-        await Task.WhenAll(_productCatalogApiContainer.StartAsync(), _usersApiContainer.StartAsync());
+        _invoiceApiContainer = new ContainerBuilder("ecommercestoreinvoiceapi:latest")
+            .WithNetwork(_network)
+            .WithNetworkAliases("invoice-api")
+            .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
+            .WithEnvironment("ASPNETCORE_URLS", "http://+:8080")
+            .WithEnvironment("MongoDbSettings__ConnectionString", "mongodb://admin:admin123@compose-mongodb:27017/?authSource=admin&directConnection=true")
+            .WithEnvironment("MongoDbSettings__DatabaseName", "ecommerce-store-invoice-db-test")
+            .WithEnvironment("MongoDbSettings__ShoppingCartsCollectionName", "shopping-carts")
+            .WithEnvironment("MongoDbSettings__OrdersCollectionName", "orders")
+            .WithEnvironment("MongoDbSettings__ProductVersionsCollectionName", "product-versions")
+            .WithEnvironment("MongoDbSettings__InvoicesCollectionName", "invoices")
+            .WithPortBinding(7000, 8080)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(r => r.ForPort(8080).ForPath("/health")))
+            .Build();
+
+        await Task.WhenAll(
+            _productCatalogApiContainer.StartAsync(),
+            _usersApiContainer.StartAsync(),
+            _invoiceApiContainer.StartAsync()
+        );
 
         _bffContainer = new ContainerBuilder("ecommercestorebffapi:latest")
             .WithNetwork(_network)
@@ -107,8 +127,8 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
             .WithEnvironment("ASPNETCORE_URLS", "http://+:8080")
             .WithEnvironment("ReverseProxy__Clusters__products-cluster__Destinations__destination1__Address", "http://product-api:8080")
             .WithEnvironment("ReverseProxy__Clusters__users-cluster__Destinations__destination1__Address", "http://users-api:8080")
+            .WithEnvironment("ReverseProxy__Clusters__orders-cluster__Destinations__destination1__Address", "http://invoice-api:8080")
             .WithEnvironment("GatewaySettings__BaseUrl", "http://localhost:3000")
-
             .WithPortBinding(3000, 8080)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilHttpRequestIsSucceeded(r => r.ForPort(8080).ForPath("/health")))
             .Build();
@@ -119,6 +139,7 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public new async Task DisposeAsync()
     {
         if (_bffContainer is not null) await _bffContainer.DisposeAsync();
+        if (_invoiceApiContainer is not null) await _invoiceApiContainer.DisposeAsync();
         if (_usersApiContainer is not null) await _usersApiContainer.DisposeAsync();
         if (_productCatalogApiContainer is not null) await _productCatalogApiContainer.DisposeAsync();
 
