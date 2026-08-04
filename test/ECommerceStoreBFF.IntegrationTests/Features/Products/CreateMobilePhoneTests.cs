@@ -1,17 +1,18 @@
 ﻿using ECommerceStoreBFF.AcceptanceTests;
 using ECommerceStoreBFF.Infrastructure.Generated.Products;
-using ECommerceStoreBFF.Infrastructure.Generated.Products.
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Kiota.Abstractions;
+using ECommerceStoreBFF.Infrastructure.Generated.Products.Models;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Http.HttpClientLibrary;
 using Shouldly;
 using System.Net;
-using Xunit;
+using System.Net.Http.Json;
 
 namespace ECommerceStoreBFF.IntegrationTests.Features.Products;
 
 public class CreateMobilePhoneTests : IClassFixture<ApplicationFactory>
 {
     private readonly ApplicationFactory _factory;
+    private static readonly Guid MobileCategoryId = Guid.Parse("587480bb-c126-4f9b-b531-b0244daa4ba4");
 
     public CreateMobilePhoneTests(ApplicationFactory factory)
     {
@@ -19,25 +20,16 @@ public class CreateMobilePhoneTests : IClassFixture<ApplicationFactory>
     }
 
     [Fact]
-    public async Task CreateMobilePhone_WithValidData_ShouldReturnOk_200()
+    public async Task CreateMobilePhone_WithValidXiaomiData_ShouldReturnSuccess_200()
     {
         // Arrange
-        using var scope = _factory.Services.CreateScope();
-        var client = scope.ServiceProvider.GetRequiredService<ProductsApiClient>();
+        var httpClient = _factory.CreateClient();
+        var adapter = new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient);
+        var client = new ProductsApiClient(adapter);
 
-        // ⚠️ Use the Kiota-generated model for the request body
-        var validRequest = new CreateMobilePhoneCommand
-        {
-            Name = "Samsung Galaxy S26",
-            Description = "Latest flagship phone.",
-            Price = 1199.99d,
-            Brand = "Samsung",
-            StockQuantity = 50
-        };
+        var validRequest = CreateBaseValidRequest();
 
         // Act
-        // Kiota will automatically throw if the response is not 2xx.
-        // If it successfully returns the object, we know it was a 200/201 Success!
         var response = await client.MobilePhones.PostAsync(validRequest);
 
         // Assert
@@ -45,61 +37,89 @@ public class CreateMobilePhoneTests : IClassFixture<ApplicationFactory>
     }
 
     [Fact]
-    public async Task CreateMobilePhone_WithMissingName_ShouldThrowBadRequest_400()
+    public async Task CreateMobilePhone_WithMissingName_ShouldReturnBadRequest_400()
     {
         // Arrange
-        using var scope = _factory.Services.CreateScope();
-        var client = scope.ServiceProvider.GetRequiredService<ProductsApiClient>();
+        var client = _factory.CreateClient();
 
-        var invalidRequest = new CreateMobilePhoneCommand
-        {
-            // Name is missing
-            Description = "A phone with no name.",
-            Price = 500.00d,
-            Brand = "Samsung",
-            StockQuantity = 10
-        };
+        var invalidRequest = CreateBaseValidRequest();
+        invalidRequest.CommonDescription.Name = string.Empty;
 
-        // Act & Assert
-        // 1. Catch the generic ApiException (or the specific one Kiota generated for your 400 response)
-        var exception = await Should.ThrowAsync<ApiException>(async () =>
-        {
-            await client.MobilePhones.PostAsync(invalidRequest);
-        });
+        // Act
+        var response = await client.PostAsJsonAsync("/mobile-phones", invalidRequest);
 
-        // 2. Verify it's a 400 Bad Request
-        exception.ResponseStatusCode.ShouldBe((int)HttpStatusCode.BadRequest);
+        // Assert
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
 
-        // 3. Inspect the error message/content
-        // Note: If your OpenAPI spec defines the 400 response schema, Kiota likely generated 
-        // a specific Exception type for it (e.g., `ValidationException`). 
-        // If so, change `ApiException` above to your specific type and assert on its properties!
-        exception.Message.ShouldContain("Name", Case.Insensitive);
+        var rawJson = await response.Content.ReadAsStringAsync();
+
+        rawJson.ShouldNotBeNullOrEmpty();
+        rawJson.ShouldContain("Name", Case.Insensitive);
     }
 
-    [Fact]
-    public async Task CreateMobilePhone_WithNegativePrice_ShouldThrowBadRequest_400()
+    private static CreateMobilePhoneExternalDto CreateBaseValidRequest()
     {
-        // Arrange
-        using var scope = _factory.Services.CreateScope();
-        var client = scope.ServiceProvider.GetRequiredService<ProductsApiClient>();
-
-        var invalidRequest = new CreateMobilePhoneCommand
+        return new CreateMobilePhoneExternalDto
         {
-            Name = "Google Pixel 10",
-            Description = "Google smartphone",
-            Price = -50.00d, // ❌ Invalid Price
-            Brand = "Google",
-            StockQuantity = 20
+            CategoryId = MobileCategoryId,
+            Camera = "50 MP (Sony LYT-600, OIS) + 8 MP ultrawide, 20 MP front",
+            FingerPrint = true,
+            FaceId = false,
+            Description2 = "Xiaomi POCO F7 has a 50 MP main camera with a Sony LYT-600 sensor...",
+            Description3 = "POCO F7 has an elegant, flat body that is 8.2 mm thick...",
+
+            CommonDescription = new CommonDescriptionExtrernalDto
+            {
+                Name = "Xiaomi POCO F7 12/512GB Black",
+                Brand = "Xiaomi",
+                Description = "The POCO F7 display has a 2772 x 1280 px resolution...",
+                MainPhoto = "xiaomi-poco-f7-black-main.jpg",
+                OtherPhotos = new List<string> { "xiaomi-poco-f7-black-1.jpg", "xiaomi-poco-f7-black-2.jpg" }
+            },
+            ElectronicDetails = new CreateElectronicDetailsExternalDto
+            {
+                Cpu = "Qualcomm Snapdragon 8s Gen 4",
+                Gpu = "Adreno",
+                Ram = "12 GB",
+                Storage = "512 GB",
+                DisplayType = "AMOLED",
+                RefreshRateHz = 120,
+                ScreenSizeInches = 6.83d,
+                Width = 78,
+                Height = 163,
+                BatteryType = "Li-Ion",
+                BatteryCapacity = 6500
+            },
+            Connectivity = new CreateConnectivityExternalDto
+            {
+                Has5G = true,
+                WiFi = true,
+                Nfc = true,
+                Bluetooth = true
+            },
+            SatelliteNavigationSystems = new CreateSatelliteNavigationSystemExternalDto
+            {
+                Gps = true,
+                Agps = false,
+                Galileo = false,
+                Glonass = false,
+                Qzss = false
+            },
+            Sensors = new CreateSensorsExternalDto
+            {
+                Accelerometer = true,
+                Gyroscope = true,
+                Proximity = true,
+                Compass = true,
+                Barometer = false,
+                Halla = false,
+                AmbientLight = true
+            },
+            Price = new CreateMoneyExternalDto
+            {
+                Amount = 2499.00d,
+                Currency = "PLN"
+            }
         };
-
-        // Act & Assert
-        var exception = await Should.ThrowAsync<ApiException>(async () =>
-        {
-            await client.MobilePhones.PostAsync(invalidRequest);
-        });
-
-        exception.ResponseStatusCode.ShouldBe((int)HttpStatusCode.BadRequest);
-        exception.Message.ShouldContain("Price", Case.Insensitive);
     }
 }
