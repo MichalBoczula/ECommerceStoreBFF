@@ -13,7 +13,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
     #pragma warning restore CS1591
     {
         /// <summary>The brand property</summary>
-        public int? Brand { get; set; }
+        public global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhonesBrand? Brand { get; set; }
         /// <summary>The maximalPrice property</summary>
         public double? MaximalPrice { get; set; }
         /// <summary>The minimalPrice property</summary>
@@ -36,7 +36,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "brand", n => { Brand = n.GetIntValue(); } },
+                { "brand", n => { Brand = n.GetEnumValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhonesBrand>(); } },
                 { "maximalPrice", n => { MaximalPrice = n.GetDoubleValue(); } },
                 { "minimalPrice", n => { MinimalPrice = n.GetDoubleValue(); } },
             };
@@ -48,7 +48,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteIntValue("brand", Brand);
+            writer.WriteEnumValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhonesBrand>("brand", Brand);
             writer.WriteDoubleValue("maximalPrice", MaximalPrice);
             writer.WriteDoubleValue("minimalPrice", MinimalPrice);
         }
