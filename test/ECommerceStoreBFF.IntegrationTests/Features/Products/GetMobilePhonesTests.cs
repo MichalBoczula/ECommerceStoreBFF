@@ -4,49 +4,51 @@ using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
 using Shouldly;
 
-namespace ECommerceStoreBFF.IntegrationTests.Features.Products;
-
-public class GetMobilePhonesTests : IClassFixture<ApplicationFactory>
+namespace ECommerceStoreBFF.IntegrationTests.Features.Products
 {
-    private readonly ApplicationFactory _factory;
-
-    public GetMobilePhonesTests(ApplicationFactory factory)
+    [Collection("Api Test Collection")]
+    public class GetMobilePhonesTests
     {
-        _factory = factory;
-    }
+        private readonly ApplicationFactory _factory;
 
-    [Fact]
-    public async Task GetMobilePhones_ShouldReturnList_200()
-    {
-        // Arrange
-        var httpClient = _factory.CreateClient();
-        var adapter = new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient);
-        var client = new ProductsApiClient(adapter);
-
-        // Act
-        var response = await client.MobilePhones.GetAsync(requestConfiguration =>
+        public GetMobilePhonesTests(ApplicationFactory factory)
         {
-            requestConfiguration.QueryParameters.Amount = 15;
-        });
+            _factory = factory;
+        }
 
-        // Assert
-        response.ShouldNotBeNull();
-        response.ShouldNotBeEmpty();
-        response.Count.ShouldBe(15);
-    }
+        [Fact]
+        public async Task GetMobilePhones_ShouldReturnList_200()
+        {
+            // Arrange
+            var httpClient = _factory.CreateClient();
+            var adapter = new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient);
+            var client = new ProductsApiClient(adapter);
 
-    [Fact]
-    public async Task GetTopMobilePhones_ShouldReturnList_200()
-    {
-        // Arrange
-        var httpClient = _factory.CreateClient();
-        var adapter = new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient);
-        var client = new ProductsApiClient(adapter);
+            // Act
+            var response = await client.MobilePhones.GetAsync(requestConfiguration =>
+            {
+                requestConfiguration.QueryParameters.Amount = 15;
+            });
 
-        // Act
-        var response = await client.MobilePhones.Top.GetAsync();
+            // Assert
+            response.ShouldNotBeNull();
+            response.ShouldNotBeEmpty();
+            response.Count.ShouldBe(15);
+        }
 
-        // Assert
-        response.ShouldNotBeNull();
+        [Fact]
+        public async Task GetTopMobilePhones_ShouldReturnList_200()
+        {
+            // Arrange
+            var httpClient = _factory.CreateClient();
+            var adapter = new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient);
+            var client = new ProductsApiClient(adapter);
+
+            // Act
+            var response = await client.MobilePhones.Top.GetAsync();
+
+            // Assert
+            response.ShouldNotBeNull();
+        }
     }
 }

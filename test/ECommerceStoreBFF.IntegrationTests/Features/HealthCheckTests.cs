@@ -3,7 +3,8 @@ using System.Net;
 
 namespace ECommerceStoreBFF.IntegrationTests.Features
 {
-    public class HealthCheckTests : IClassFixture<ApplicationFactory>
+    [Collection("Api Test Collection")]
+    public class HealthCheckTests
     {
         private readonly ApplicationFactory _factory;
 

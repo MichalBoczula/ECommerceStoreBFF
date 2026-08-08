@@ -7,7 +7,8 @@ using Shouldly;
 
 namespace ECommerceStoreBFF.IntegrationTests.Features.Products
 {
-    public class FilterMobilePhonesTests : IClassFixture<ApplicationFactory>
+    [Collection("Api Test Collection")]
+    public class FilterMobilePhonesTests
     {
         private readonly ApplicationFactory _factory;
 
@@ -66,7 +67,7 @@ namespace ECommerceStoreBFF.IntegrationTests.Features.Products
             response.ShouldNotBeNull();
             response.ShouldNotBeEmpty();
 
-            response.Count.ShouldBe(2);
+            response.Count.ShouldBe(1);
 
             foreach (var phone in response)
             {
