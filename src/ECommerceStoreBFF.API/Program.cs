@@ -3,6 +3,17 @@ using ECommerceStoreBFF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularCorsPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
 builder.Services.AddReverseProxy()
@@ -13,6 +24,8 @@ builder.Services.AddHealthChecks();
 var app = builder.Build();
 
 app.MapHealthChecks("/health");
+
+app.UseCors("AngularCorsPolicy");
 
 app.MapScalarApiReference("scalar/products", options =>
 {
