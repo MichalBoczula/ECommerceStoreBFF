@@ -1,0 +1,1617 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "ProductCatalog.Api",
+    "version": "1.0"
+  },
+  "paths": {
+    "/products-documentation/flow": {
+      "get": {
+        "tags": [
+          "Documentation"
+        ],
+        "summary": "Describe all request flows",
+        "description": "Returns the ordered steps executed when handling every documented request.",
+        "operationId": "DescribeAllFlows",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FlowDescription"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products-documentation/validation-policies": {
+      "get": {
+        "tags": [
+          "Documentation"
+        ],
+        "summary": "Describe all validation policies",
+        "description": "Returns validation policies with their rules and possible validation errors.",
+        "operationId": "DescribeValidationPolicies",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ValidationPolicyDescriptor"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile-phones/by-ids": {
+      "post": {
+        "tags": [
+          "MobilePhones"
+        ],
+        "summary": "Get mobile phones by Ids",
+        "description": "Returns active mobile phones matching the provided Ids, ordered by Id.",
+        "operationId": "GetMobilePhonesByIds",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MobilePhoneDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile-phones/{id}": {
+      "get": {
+        "tags": [
+          "MobilePhones"
+        ],
+        "summary": "Get mobile phone by Id",
+        "description": "Returns the mobile phone details when the Id exists, including inactive phones; 404 otherwise.",
+        "operationId": "GetMobilePhoneById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobilePhoneDetailsDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "MobilePhones"
+        ],
+        "summary": "Update mobile phone",
+        "description": "Updates a mobile phone. An unchanged request is a successful no-op; a concurrent write returns 409, or 404 if the row was removed during the request.",
+        "operationId": "UpdateMobilePhone",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMobilePhoneExternalDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobilePhoneDetailsDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "MobilePhones"
+        ],
+        "summary": "Delete mobile phone",
+        "description": "Soft deletes a mobile phone. Repeating a delete is a successful no-op; an overlapping update/delete returns 409, or 404 if the row was removed during the request.",
+        "operationId": "DeleteMobilePhone",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobilePhoneDetailsDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile-phones": {
+      "get": {
+        "tags": [
+          "MobilePhones"
+        ],
+        "summary": "Get mobile phones",
+        "description": "Returns up to the requested amount of active mobile phones ordered by name, then Id.",
+        "operationId": "GetMobilePhones",
+        "parameters": [
+          {
+            "name": "amount",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MobilePhoneDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "MobilePhones"
+        ],
+        "summary": "Create mobile phone",
+        "description": "Creates a new mobile phone and returns the created resource.",
+        "operationId": "CreateMobilePhone",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMobilePhoneExternalDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobilePhoneDetailsDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile-phones/{id}/history": {
+      "get": {
+        "tags": [
+          "MobilePhones"
+        ],
+        "summary": "Get mobile phone history",
+        "description": "Returns paged change history, newest first; ties in ChangedAt are ordered by history Id descending.",
+        "operationId": "GetMobilePhoneHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MobilePhoneHistoryDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile-phones/top": {
+      "get": {
+        "tags": [
+          "MobilePhones"
+        ],
+        "summary": "Get top mobile phones",
+        "description": "Returns the three most recently changed active mobile phones, ordered by ChangedAt descending, then Id descending. Top means recent changes, not sales popularity.",
+        "operationId": "GetTopMobilePhones",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TopMobilePhoneDto"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mobile-phones/filter": {
+      "post": {
+        "tags": [
+          "MobilePhones"
+        ],
+        "summary": "Get filtered mobile phones",
+        "description": "Returns active mobile phones matching the filter, ordered by name, then Id.",
+        "operationId": "GetFiltered MobilePhones",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MobilePhoneFilterDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MobilePhoneDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ApiProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          },
+          "missingProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "traceId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {}
+      },
+      "CommonDescriptionDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mainPhoto": {
+            "type": "string"
+          },
+          "otherPhotos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CommonDescriptionExtrernalDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mainPhoto": {
+            "type": "string"
+          },
+          "otherPhotos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConnectivityDto": {
+        "required": [
+          "bluetooth",
+          "has5G",
+          "nfc",
+          "wiFi"
+        ],
+        "type": "object",
+        "properties": {
+          "has5G": {
+            "type": "boolean"
+          },
+          "wiFi": {
+            "type": "boolean"
+          },
+          "nfc": {
+            "type": "boolean"
+          },
+          "bluetooth": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateConnectivityExternalDto": {
+        "required": [
+          "bluetooth",
+          "has5G",
+          "nfc",
+          "wiFi"
+        ],
+        "type": "object",
+        "properties": {
+          "has5G": {
+            "type": "boolean"
+          },
+          "wiFi": {
+            "type": "boolean"
+          },
+          "nfc": {
+            "type": "boolean"
+          },
+          "bluetooth": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateElectronicDetailsExternalDto": {
+        "type": "object",
+        "properties": {
+          "cpu": {
+            "type": "string"
+          },
+          "gpu": {
+            "type": "string"
+          },
+          "ram": {
+            "type": "string"
+          },
+          "storage": {
+            "type": "string"
+          },
+          "displayType": {
+            "type": "string"
+          },
+          "refreshRateHz": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "screenSizeInches": {
+            "type": "number",
+            "format": "double"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "batteryType": {
+            "type": "string"
+          },
+          "batteryCapacity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateMobilePhoneExternalDto": {
+        "required": [
+          "camera",
+          "commonDescription",
+          "connectivity",
+          "description2",
+          "description3",
+          "electronicDetails",
+          "faceId",
+          "fingerPrint",
+          "price",
+          "satelliteNavigationSystems",
+          "sensors"
+        ],
+        "type": "object",
+        "properties": {
+          "commonDescription": {
+            "$ref": "#/components/schemas/CommonDescriptionExtrernalDto"
+          },
+          "electronicDetails": {
+            "$ref": "#/components/schemas/CreateElectronicDetailsExternalDto"
+          },
+          "connectivity": {
+            "$ref": "#/components/schemas/CreateConnectivityExternalDto"
+          },
+          "satelliteNavigationSystems": {
+            "$ref": "#/components/schemas/CreateSatelliteNavigationSystemExternalDto"
+          },
+          "sensors": {
+            "$ref": "#/components/schemas/CreateSensorsExternalDto"
+          },
+          "camera": {
+            "type": "string"
+          },
+          "fingerPrint": {
+            "type": "boolean"
+          },
+          "faceId": {
+            "type": "boolean"
+          },
+          "price": {
+            "$ref": "#/components/schemas/CreateMoneyExternalDto"
+          },
+          "description2": {
+            "type": "string"
+          },
+          "description3": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateMoneyExternalDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateSatelliteNavigationSystemExternalDto": {
+        "required": [
+          "agps",
+          "galileo",
+          "glonass",
+          "gps",
+          "qzss"
+        ],
+        "type": "object",
+        "properties": {
+          "gps": {
+            "type": "boolean"
+          },
+          "agps": {
+            "type": "boolean"
+          },
+          "galileo": {
+            "type": "boolean"
+          },
+          "glonass": {
+            "type": "boolean"
+          },
+          "qzss": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateSensorsExternalDto": {
+        "required": [
+          "accelerometer",
+          "ambientLight",
+          "barometer",
+          "compass",
+          "gyroscope",
+          "halla",
+          "proximity"
+        ],
+        "type": "object",
+        "properties": {
+          "accelerometer": {
+            "type": "boolean"
+          },
+          "gyroscope": {
+            "type": "boolean"
+          },
+          "proximity": {
+            "type": "boolean"
+          },
+          "compass": {
+            "type": "boolean"
+          },
+          "barometer": {
+            "type": "boolean"
+          },
+          "halla": {
+            "type": "boolean"
+          },
+          "ambientLight": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ElectronicDetailsDto": {
+        "required": [
+          "batteryCapacity",
+          "batteryType",
+          "cpu",
+          "displayType",
+          "gpu",
+          "height",
+          "ram",
+          "refreshRateHz",
+          "screenSizeInches",
+          "storage",
+          "width"
+        ],
+        "type": "object",
+        "properties": {
+          "cpu": {
+            "type": "string"
+          },
+          "gpu": {
+            "type": "string"
+          },
+          "ram": {
+            "type": "string"
+          },
+          "storage": {
+            "type": "string"
+          },
+          "displayType": {
+            "type": "string"
+          },
+          "refreshRateHz": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "screenSizeInches": {
+            "type": "number",
+            "format": "double"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "batteryType": {
+            "type": "string"
+          },
+          "batteryCapacity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FlowDescription": {
+        "required": [
+          "actionName"
+        ],
+        "type": "object",
+        "properties": {
+          "actionName": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MobilePhoneDetailsDto": {
+        "required": [
+          "camera",
+          "commonDescription",
+          "connectivity",
+          "description2",
+          "description3",
+          "electronicDetails",
+          "faceId",
+          "fingerPrint",
+          "id",
+          "isActive",
+          "price",
+          "satelliteNavigationSystems",
+          "sensors"
+        ],
+        "type": "object",
+        "properties": {
+          "commonDescription": {
+            "$ref": "#/components/schemas/CommonDescriptionDto"
+          },
+          "electronicDetails": {
+            "$ref": "#/components/schemas/ElectronicDetailsDto"
+          },
+          "connectivity": {
+            "$ref": "#/components/schemas/ConnectivityDto"
+          },
+          "satelliteNavigationSystems": {
+            "$ref": "#/components/schemas/SatelliteNavigationSystemDto"
+          },
+          "sensors": {
+            "$ref": "#/components/schemas/SensorsDto"
+          },
+          "camera": {
+            "type": "string"
+          },
+          "price": {
+            "$ref": "#/components/schemas/MoneyDto"
+          },
+          "fingerPrint": {
+            "type": "boolean"
+          },
+          "faceId": {
+            "type": "boolean"
+          },
+          "description2": {
+            "type": "string"
+          },
+          "description3": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MobilePhoneDto": {
+        "required": [
+          "camera",
+          "displayType",
+          "price",
+          "screenSizeInches"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "displayType": {
+            "type": "string"
+          },
+          "screenSizeInches": {
+            "type": "number",
+            "format": "double"
+          },
+          "camera": {
+            "type": "string"
+          },
+          "price": {
+            "$ref": "#/components/schemas/MoneyDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MobilePhoneFilterDto": {
+        "type": "object",
+        "properties": {
+          "brand": {
+            "$ref": "#/components/schemas/MobilePhonesBrand"
+          },
+          "minimalPrice": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "maximalPrice": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MobilePhoneHistoryDto": {
+        "required": [
+          "camera",
+          "changedAt",
+          "commonDescription",
+          "connectivity",
+          "description2",
+          "description3",
+          "electronicDetails",
+          "faceId",
+          "fingerPrint",
+          "id",
+          "isActive",
+          "mobilePhoneId",
+          "operation",
+          "price",
+          "satelliteNavigationSystems",
+          "sensors"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "mobilePhoneId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "commonDescription": {
+            "$ref": "#/components/schemas/CommonDescriptionDto"
+          },
+          "electronicDetails": {
+            "$ref": "#/components/schemas/ElectronicDetailsDto"
+          },
+          "connectivity": {
+            "$ref": "#/components/schemas/ConnectivityDto"
+          },
+          "satelliteNavigationSystems": {
+            "$ref": "#/components/schemas/SatelliteNavigationSystemDto"
+          },
+          "sensors": {
+            "$ref": "#/components/schemas/SensorsDto"
+          },
+          "camera": {
+            "type": "string"
+          },
+          "price": {
+            "$ref": "#/components/schemas/MoneyDto"
+          },
+          "fingerPrint": {
+            "type": "boolean"
+          },
+          "faceId": {
+            "type": "boolean"
+          },
+          "description2": {
+            "type": "string"
+          },
+          "description3": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "changedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/Operation"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MobilePhonesBrand": {
+        "enum": [
+          "Apple",
+          "Motorola",
+          "Samsung",
+          "Xiaomi"
+        ],
+        "type": "string"
+      },
+      "MoneyDto": {
+        "required": [
+          "amount",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Operation": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "SatelliteNavigationSystemDto": {
+        "required": [
+          "agps",
+          "galileo",
+          "glonass",
+          "gps",
+          "qzss"
+        ],
+        "type": "object",
+        "properties": {
+          "gps": {
+            "type": "boolean"
+          },
+          "agps": {
+            "type": "boolean"
+          },
+          "galileo": {
+            "type": "boolean"
+          },
+          "glonass": {
+            "type": "boolean"
+          },
+          "qzss": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SensorsDto": {
+        "required": [
+          "accelerometer",
+          "ambientLight",
+          "barometer",
+          "compass",
+          "gyroscope",
+          "halla",
+          "proximity"
+        ],
+        "type": "object",
+        "properties": {
+          "accelerometer": {
+            "type": "boolean"
+          },
+          "gyroscope": {
+            "type": "boolean"
+          },
+          "proximity": {
+            "type": "boolean"
+          },
+          "compass": {
+            "type": "boolean"
+          },
+          "barometer": {
+            "type": "boolean"
+          },
+          "halla": {
+            "type": "boolean"
+          },
+          "ambientLight": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TopMobilePhoneDto": {
+        "required": [
+          "commonDescription",
+          "id",
+          "price"
+        ],
+        "type": "object",
+        "properties": {
+          "commonDescription": {
+            "$ref": "#/components/schemas/TopMobilePhonesCommonDescriptionDto"
+          },
+          "price": {
+            "$ref": "#/components/schemas/MoneyDto"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TopMobilePhonesCommonDescriptionDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mainPhoto": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateConnectivityExternalDto": {
+        "required": [
+          "bluetooth",
+          "has5G",
+          "nfc",
+          "wiFi"
+        ],
+        "type": "object",
+        "properties": {
+          "has5G": {
+            "type": "boolean"
+          },
+          "wiFi": {
+            "type": "boolean"
+          },
+          "nfc": {
+            "type": "boolean"
+          },
+          "bluetooth": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateElectronicDetailsExternalDto": {
+        "type": "object",
+        "properties": {
+          "cpu": {
+            "type": "string"
+          },
+          "gpu": {
+            "type": "string"
+          },
+          "ram": {
+            "type": "string"
+          },
+          "storage": {
+            "type": "string"
+          },
+          "displayType": {
+            "type": "string"
+          },
+          "refreshRateHz": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "screenSizeInches": {
+            "type": "number",
+            "format": "double"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "batteryType": {
+            "type": "string"
+          },
+          "batteryCapacity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateMobilePhoneExternalDto": {
+        "required": [
+          "camera",
+          "commonDescription",
+          "connectivity",
+          "description2",
+          "description3",
+          "electronicDetails",
+          "faceId",
+          "fingerPrint",
+          "price",
+          "satelliteNavigationSystems",
+          "sensors"
+        ],
+        "type": "object",
+        "properties": {
+          "commonDescription": {
+            "$ref": "#/components/schemas/CommonDescriptionExtrernalDto"
+          },
+          "electronicDetails": {
+            "$ref": "#/components/schemas/UpdateElectronicDetailsExternalDto"
+          },
+          "connectivity": {
+            "$ref": "#/components/schemas/UpdateConnectivityExternalDto"
+          },
+          "satelliteNavigationSystems": {
+            "$ref": "#/components/schemas/UpdateSatelliteNavigationSystemExternalDto"
+          },
+          "sensors": {
+            "$ref": "#/components/schemas/UpdateSensorsExternalDto"
+          },
+          "camera": {
+            "type": "string"
+          },
+          "fingerPrint": {
+            "type": "boolean"
+          },
+          "faceId": {
+            "type": "boolean"
+          },
+          "price": {
+            "$ref": "#/components/schemas/UpdateMoneyExternalDto"
+          },
+          "description2": {
+            "type": "string"
+          },
+          "description3": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateMoneyExternalDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateSatelliteNavigationSystemExternalDto": {
+        "required": [
+          "agps",
+          "galileo",
+          "glonass",
+          "gps",
+          "qzss"
+        ],
+        "type": "object",
+        "properties": {
+          "gps": {
+            "type": "boolean"
+          },
+          "agps": {
+            "type": "boolean"
+          },
+          "galileo": {
+            "type": "boolean"
+          },
+          "glonass": {
+            "type": "boolean"
+          },
+          "qzss": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateSensorsExternalDto": {
+        "required": [
+          "accelerometer",
+          "ambientLight",
+          "barometer",
+          "compass",
+          "gyroscope",
+          "halla",
+          "proximity"
+        ],
+        "type": "object",
+        "properties": {
+          "accelerometer": {
+            "type": "boolean"
+          },
+          "gyroscope": {
+            "type": "boolean"
+          },
+          "proximity": {
+            "type": "boolean"
+          },
+          "compass": {
+            "type": "boolean"
+          },
+          "barometer": {
+            "type": "boolean"
+          },
+          "halla": {
+            "type": "boolean"
+          },
+          "ambientLight": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationError": {
+        "required": [
+          "entity",
+          "message",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "entity": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationPolicyDescriptor": {
+        "required": [
+          "policyName",
+          "rules"
+        ],
+        "type": "object",
+        "properties": {
+          "policyName": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationRuleDescriptor"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationRuleDescriptor": {
+        "required": [
+          "ruleName",
+          "rules"
+        ],
+        "type": "object",
+        "properties": {
+          "ruleName": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Documentation"
+    },
+    {
+      "name": "MobilePhones"
+    }
+  ]
+}

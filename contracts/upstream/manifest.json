@@ -1,0 +1,23 @@
+{
+  "products": {
+    "image": "mb0101/product-catalog-api@sha256:1814ef51bb86a2e34a4eff198c6fc1be31c9921b55fb4f5be12a02277b5e374d",
+    "sourceCommit": null,
+    "exportMethod": "published application layer",
+    "specSha256": "fa0c8a3db1ab9faeee8995d7a0cacd67f120b0e4c9679aa46bf58b19aa0a5302",
+    "paths": 8
+  },
+  "users": {
+    "image": "mb0101/ecommerce-store-users-api@sha256:2242777af2ada38dc9f98ef593f3a0670f04a400027d76e999660f92ce64300e",
+    "sourceCommit": "16c1b364df69f1db8b9addb78ff224908a63593c",
+    "exportMethod": "matching source commit; isolated WebApplicationFactory export",
+    "specSha256": "fce16260f0801d35696ffa4a3ee2663bc3b34d1deba200990240e9256f541ea8",
+    "paths": 12
+  },
+  "invoice": {
+    "image": "mb0101/ecommerce-store-invoice-api@sha256:35059e4b5e3af8e3a89d61dd34d1453f9096c3892b026004d0b904b58f8be598",
+    "sourceCommit": "03a0ce67d55091c8593a078f3b8977e4cd836dfd",
+    "exportMethod": "published application layer",
+    "specSha256": "4ad35148124b8944ff7e665e6dd54b6388ad003f056aa37bd1203f63e3e8c8c2",
+    "paths": 11
+  }
+}
