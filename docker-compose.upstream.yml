@@ -29,16 +29,17 @@ services:
       mongodb:
         condition: service_healthy
     entrypoint: ["/bin/bash", "-ec"]
-    command: |
-      mongosh 'mongodb://mongodb:27017/?directConnection=true' --quiet --eval '
-        try { rs.status(); }
-        catch (error) { rs.initiate({ _id: "rs0", members: [{ _id: 0, host: "mongodb:27017" }] }); }
-      '
-      for attempt in {1..30}; do
-        if [ "$$(mongosh 'mongodb://mongodb:27017/?directConnection=true' --quiet --eval 'print(db.hello().isWritablePrimary)')" = true ]; then exit 0; fi
-        sleep 2
-      done
-      exit 1
+    command:
+      - |
+        mongosh 'mongodb://mongodb:27017/?directConnection=true' --quiet --eval '
+          try { rs.status(); }
+          catch (error) { rs.initiate({ _id: "rs0", members: [{ _id: 0, host: "mongodb:27017" }] }); }
+        '
+        for attempt in {1..30}; do
+          if [ "$$(mongosh 'mongodb://mongodb:27017/?directConnection=true' --quiet --eval 'print(db.hello().isWritablePrimary)')" = true ]; then exit 0; fi
+          sleep 2
+        done
+        exit 1
 
   products:
     image: mb0101/product-catalog-api@sha256:1814ef51bb86a2e34a4eff198c6fc1be31c9921b55fb4f5be12a02277b5e374d
