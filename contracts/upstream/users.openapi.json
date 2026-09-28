@@ -1,0 +1,1472 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "ECommerceStoreUsers.API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/admins/external/{externalId}": {
+      "get": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Get admin profile by external identification pointer.",
+        "description": "Returns a flat administrative account overview context assigned beneath a specific identity engine reference string token context.",
+        "operationId": "GetAdminByExternalId",
+        "parameters": [
+          {
+            "name": "externalId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admins": {
+      "post": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Create admin profile.",
+        "description": "Creates a new administrator workspace account profile.",
+        "operationId": "CreateAdmin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdminRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admins/{adminId}": {
+      "put": {
+        "tags": [
+          "Admins"
+        ],
+        "summary": "Update admin profile metrics.",
+        "description": "Updates administrator name and email. An unchanged profile is a successful no-op. A concurrent change returns 409; an administrator removed before saving returns 404.",
+        "operationId": "UpdateAdminProfile",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminProfileRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/external/{externalId}": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Get customer profile data by identity engine pointer.",
+        "description": "Returns a flattened clean data view context assigned underneath a specific global external account provider identification hash sequence format block.",
+        "operationId": "GetCustomerByExternalId",
+        "parameters": [
+          {
+            "name": "externalId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers": {
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Create customer profile.",
+        "description": "Creates a new customer aggregate record complete with individual user data details and optional company metadata.",
+        "operationId": "CreateCustomer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{id}/individual": {
+      "put": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Update individual personal data.",
+        "description": "Updates individual details. A concurrent customer change returns 409; a customer removed before saving returns 404.",
+        "operationId": "UpdateIndividualData",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIndividualDataRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/companies": {
+      "post": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Add company metadata.",
+        "description": "Adds company data. Duplicate tax IDs and concurrent customer changes return 409; a customer removed before saving returns 404.",
+        "operationId": "AddCompany",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCompanyRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/companies/{companyId}": {
+      "put": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Update specific corporate company elements.",
+        "description": "Updates company data. Duplicate tax IDs and concurrent customer changes return 409; a customer removed before saving returns 404.",
+        "operationId": "UpdateCompany",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "companyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCompanyRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users-documentation/flows": {
+      "get": {
+        "tags": [
+          "Documentation"
+        ],
+        "summary": "Get flow documentation.",
+        "description": "Returns flow descriptors mapped by descriptor name, including customer, admin, and favorite workflows.",
+        "operationId": "GetFlowDocumentation",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowDescriptorsResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users-documentation/validations": {
+      "get": {
+        "tags": [
+          "Documentation"
+        ],
+        "summary": "Get validation documentation.",
+        "description": "Returns validation descriptors mapped by policy name.",
+        "operationId": "GetValidationDocumentation",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationDescriptorsResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorites/clients/{clientId}": {
+      "get": {
+        "tags": [
+          "Favorites"
+        ],
+        "summary": "Get customer favorites list.",
+        "description": "Retrieves all favorited product entries for a specified client identifier.",
+        "operationId": "GetFavoritesByClientId",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FavoriteResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Favorites"
+        ],
+        "summary": "Add product to favorites.",
+        "description": "Adds a product reference to the customer's favorites list; returns 409 if the pair already exists, including concurrent inserts.",
+        "operationId": "AddProductToFavorites",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddFavoriteRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FavoriteResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Favorites"
+        ],
+        "summary": "Clear all customer favorites.",
+        "description": "Removes all saved product favorites for a specific client.",
+        "operationId": "ClearClientFavorites",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorites/clients/{clientId}/products/{productId}": {
+      "delete": {
+        "tags": [
+          "Favorites"
+        ],
+        "summary": "Remove product from favorites.",
+        "description": "Removes a specific product from the client's favorites; returns 404 if it is missing when the delete executes.",
+        "operationId": "RemoveProductFromFavorites",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddCompanyRequestDto": {
+        "required": [
+          "billingAddress",
+          "companyName",
+          "shippingAddress",
+          "taxId"
+        ],
+        "type": "object",
+        "properties": {
+          "taxId": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "billingAddress": {
+            "$ref": "#/components/schemas/AddressRequestDto"
+          },
+          "shippingAddress": {
+            "$ref": "#/components/schemas/AddressRequestDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddFavoriteRequestDto": {
+        "required": [
+          "productId"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddressRequestDto": {
+        "required": [
+          "apartmentNumber",
+          "buildingNumber",
+          "city",
+          "postalCode",
+          "street"
+        ],
+        "type": "object",
+        "properties": {
+          "postalCode": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "street": {
+            "type": "string"
+          },
+          "buildingNumber": {
+            "type": "string"
+          },
+          "apartmentNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddressResponseDto": {
+        "required": [
+          "apartmentNumber",
+          "buildingNumber",
+          "city",
+          "postalCode",
+          "street"
+        ],
+        "type": "object",
+        "properties": {
+          "postalCode": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "street": {
+            "type": "string"
+          },
+          "buildingNumber": {
+            "type": "string"
+          },
+          "apartmentNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AdminResponseDto": {
+        "required": [
+          "email",
+          "externalId",
+          "fullName",
+          "id",
+          "isActive",
+          "lastLoginAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "externalId": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "lastLoginAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApiProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          },
+          "missingProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "traceId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {}
+      },
+      "CompanyDataResponseDto": {
+        "required": [
+          "billingAddress",
+          "companyName",
+          "id",
+          "shippingAddress",
+          "taxId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taxId": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "billingAddress": {
+            "$ref": "#/components/schemas/AddressResponseDto"
+          },
+          "shippingAddress": {
+            "$ref": "#/components/schemas/AddressResponseDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateAdminRequestDto": {
+        "required": [
+          "email",
+          "externalId",
+          "fullName"
+        ],
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateCustomerRequestDto": {
+        "required": [
+          "externalId",
+          "individual"
+        ],
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string"
+          },
+          "individual": {
+            "$ref": "#/components/schemas/IndividualDataRequestDto"
+          },
+          "companies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AddCompanyRequestDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerResponseDto": {
+        "required": [
+          "companies",
+          "externalId",
+          "id",
+          "individual",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "externalId": {
+            "type": "string"
+          },
+          "individual": {
+            "$ref": "#/components/schemas/IndividualDataResponseDto"
+          },
+          "companies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompanyDataResponseDto"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FavoriteResponseDto": {
+        "required": [
+          "addedAt",
+          "clientId",
+          "id",
+          "productId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "addedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FlowDescriptor": {
+        "required": [
+          "flowName",
+          "steps"
+        ],
+        "type": "object",
+        "properties": {
+          "flowName": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlowStepDescriptor"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FlowDescriptorsResponseDto": {
+        "required": [
+          "flows"
+        ],
+        "type": "object",
+        "properties": {
+          "flows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/FlowDescriptor"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FlowStepDescriptor": {
+        "required": [
+          "bpmnId",
+          "order",
+          "stepName"
+        ],
+        "type": "object",
+        "properties": {
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "stepName": {
+            "type": "string"
+          },
+          "bpmnId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "IndividualDataRequestDto": {
+        "required": [
+          "billingAddress",
+          "email",
+          "firstName",
+          "lastName",
+          "phone",
+          "shippingAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "billingAddress": {
+            "$ref": "#/components/schemas/AddressRequestDto"
+          },
+          "shippingAddress": {
+            "$ref": "#/components/schemas/AddressRequestDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "IndividualDataResponseDto": {
+        "required": [
+          "billingAddress",
+          "email",
+          "firstName",
+          "lastName",
+          "phone",
+          "shippingAddress"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "billingAddress": {
+            "$ref": "#/components/schemas/AddressResponseDto"
+          },
+          "shippingAddress": {
+            "$ref": "#/components/schemas/AddressResponseDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAdminProfileRequestDto": {
+        "required": [
+          "email",
+          "fullName"
+        ],
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateCompanyRequestDto": {
+        "required": [
+          "billingAddress",
+          "companyName",
+          "shippingAddress",
+          "taxId"
+        ],
+        "type": "object",
+        "properties": {
+          "taxId": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "billingAddress": {
+            "$ref": "#/components/schemas/AddressRequestDto"
+          },
+          "shippingAddress": {
+            "$ref": "#/components/schemas/AddressRequestDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateIndividualDataRequestDto": {
+        "required": [
+          "individual"
+        ],
+        "type": "object",
+        "properties": {
+          "individual": {
+            "$ref": "#/components/schemas/IndividualDataRequestDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationDescriptorsResponseDto": {
+        "required": [
+          "validations"
+        ],
+        "type": "object",
+        "properties": {
+          "validations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/components/schemas/ValidationPolicyDescriptor"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationError": {
+        "required": [
+          "entity",
+          "message",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "entity": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationPolicyDescriptor": {
+        "required": [
+          "policyName",
+          "rules"
+        ],
+        "type": "object",
+        "properties": {
+          "policyName": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationRuleDescriptor"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationRuleDescriptor": {
+        "required": [
+          "ruleName",
+          "rules"
+        ],
+        "type": "object",
+        "properties": {
+          "ruleName": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Admins"
+    },
+    {
+      "name": "Customers"
+    },
+    {
+      "name": "Documentation"
+    },
+    {
+      "name": "Favorites"
+    }
+  ]
+}

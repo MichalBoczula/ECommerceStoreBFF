@@ -1,0 +1,23 @@
+name: Upstream API baseline
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - '.github/workflows/upstream-contracts.yml'
+      - 'contracts/upstream/**'
+      - 'docker-compose.upstream.yml'
+      - 'scripts/verify-upstream-images.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  upstream-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify pinned images and OpenAPI
+        run: bash scripts/verify-upstream-images.sh
