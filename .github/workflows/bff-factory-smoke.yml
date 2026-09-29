@@ -22,5 +22,5 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - name: Start upstreams and check BFF routing
-        run: dotnet test test/ECommerceStoreBFF.IntegrationTests/ECommerceStoreBFF.IntegrationTests.csproj --filter FullyQualifiedName~HealthCheckTests --logger 'console;verbosity=normal'
+      - name: Check BFF routing and Products scenarios
+        run: dotnet test test/ECommerceStoreBFF.IntegrationTests/ECommerceStoreBFF.IntegrationTests.csproj --filter 'FullyQualifiedName~HealthCheckTests|FullyQualifiedName~Features.Products' --logger 'console;verbosity=normal'
