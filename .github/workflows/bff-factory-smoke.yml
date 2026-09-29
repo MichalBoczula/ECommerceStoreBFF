@@ -1,0 +1,26 @@
+name: BFF factory smoke
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - '.github/workflows/bff-factory-smoke.yml'
+      - 'test/ECommerceStoreBFF.IntegrationTests/**'
+      - 'src/**'
+      - 'contracts/upstream/manifest.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  factory-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Start upstreams and check BFF routing
+        run: dotnet test test/ECommerceStoreBFF.IntegrationTests/ECommerceStoreBFF.IntegrationTests.csproj --filter FullyQualifiedName~HealthCheckTests --logger 'console;verbosity=normal'

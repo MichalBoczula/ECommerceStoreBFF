@@ -31,4 +31,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\contracts\upstream\manifest.json" Link="upstream-manifest.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

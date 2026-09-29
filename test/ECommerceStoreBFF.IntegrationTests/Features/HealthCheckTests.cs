@@ -1,68 +1,49 @@
-﻿using ECommerceStoreBFF.AcceptanceTests;
+using ECommerceStoreBFF.AcceptanceTests;
 using System.Net;
 
-namespace ECommerceStoreBFF.IntegrationTests.Features
+namespace ECommerceStoreBFF.IntegrationTests.Features;
+
+[Collection("Api Test Collection")]
+public class HealthCheckTests(ApplicationFactory factory)
 {
-    [Collection("Api Test Collection")]
-    public class HealthCheckTests
+    [Theory]
+    [InlineData("products")]
+    [InlineData("users")]
+    [InlineData("invoice")]
+    public async Task Upstream_ReadyHealthCheck_ShouldReturnOk(string service)
     {
-        private readonly ApplicationFactory _factory;
-
-        public HealthCheckTests(ApplicationFactory factory)
+        var address = service switch
         {
-            _factory = factory;
-        }
+            "products" => factory.ProductsBaseAddress,
+            "users" => factory.UsersBaseAddress,
+            "invoice" => factory.InvoiceBaseAddress,
+            _ => throw new ArgumentOutOfRangeException(nameof(service))
+        };
 
-        [Fact]
-        public async Task ProductContainer_HealthCheck_ShouldReturnOk()
-        {
-            // Arrange
-            using var client = new HttpClient();
+        using var client = new HttpClient { BaseAddress = address };
+        using var response = await client.GetAsync("health/ready");
 
-            // Act
-            var response = await client.GetAsync("http://localhost:5000/health");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
 
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
+    [Fact]
+    public async Task Bff_HealthCheck_ShouldReturnOk()
+    {
+        using var client = factory.CreateClient();
+        using var response = await client.GetAsync("/health");
 
-        [Fact]
-        public async Task UsersContainer_HealthCheck_ShouldReturnOk()
-        {
-            // Arrange
-            using var client = new HttpClient();
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
 
-            // Act
-            var response = await client.GetAsync("http://localhost:6500/health");
+    [Theory]
+    [InlineData("/products-documentation/flow")]
+    [InlineData("/users-documentation/flows")]
+    [InlineData("/orders-documentation/flows")]
+    public async Task Bff_ForwardsToReadyUpstream(string path)
+    {
+        using var client = factory.CreateClient();
+        using var response = await client.GetAsync(path);
 
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task InvoiceContainer_HealthCheck_ShouldReturnOk()
-        {
-            // Arrange
-            using var client = new HttpClient();
-
-            // Act
-            var response = await client.GetAsync("http://localhost:7000/health");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task BffContainer_HealthCheck_ShouldReturnOk()
-        {
-            // Arrange
-            using var client = new HttpClient();
-
-            // Act
-            var response = await client.GetAsync("http://localhost:3000/health");
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 }
