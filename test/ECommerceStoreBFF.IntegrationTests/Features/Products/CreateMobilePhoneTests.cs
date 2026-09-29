@@ -13,7 +13,6 @@ namespace ECommerceStoreBFF.IntegrationTests.Features.Products
     public class CreateMobilePhoneTests
     {
         private readonly ApplicationFactory _factory;
-        private static readonly Guid MobileCategoryId = Guid.Parse("587480bb-c126-4f9b-b531-b0244daa4ba4");
 
         public CreateMobilePhoneTests(ApplicationFactory factory)
         {
@@ -62,7 +61,6 @@ namespace ECommerceStoreBFF.IntegrationTests.Features.Products
         {
             return new CreateMobilePhoneExternalDto
             {
-                CategoryId = MobileCategoryId,
                 Camera = "50 MP (Sony LYT-600, OIS) + 8 MP ultrawide, 20 MP front",
                 FingerPrint = true,
                 FaceId = false,

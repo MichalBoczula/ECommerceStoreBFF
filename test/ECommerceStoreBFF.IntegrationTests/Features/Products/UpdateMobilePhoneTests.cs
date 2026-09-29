@@ -14,7 +14,6 @@ namespace ECommerceStoreBFF.IntegrationTests.Features.Products
     {
         private readonly ApplicationFactory _factory;
 
-        private static readonly Guid MobileCategoryId = Guid.Parse("587480bb-c126-4f9b-b531-b0244daa4ba4");
 
         private static readonly Guid ExistingMobilePhoneId = Guid.Parse("0f62c3e1-8e3e-4b1f-9d74-3d6e2ff2c6d2");
 
@@ -76,7 +75,6 @@ namespace ECommerceStoreBFF.IntegrationTests.Features.Products
         {
             return new UpdateMobilePhoneExternalDto
             {
-                CategoryId = MobileCategoryId,
                 Camera = "50 MP (Sony LYT-600, OIS) + 8 MP ultrawide, 20 MP front",
                 FingerPrint = true,
                 FaceId = false,

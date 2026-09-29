@@ -5,38 +5,30 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
-namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
+namespace ECommerceStoreBFF.Infrastructure.Generated.Users.Models
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class UpdateCategoryExternalDto : IParsable
+    public partial class FavoriteResponseDto : IParsable
     #pragma warning restore CS1591
     {
-        /// <summary>The code property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Code { get; set; }
-#nullable restore
-#else
-        public string Code { get; set; }
-#endif
-        /// <summary>The name property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Name { get; set; }
-#nullable restore
-#else
-        public string Name { get; set; }
-#endif
+        /// <summary>The addedAt property</summary>
+        public DateTimeOffset? AddedAt { get; set; }
+        /// <summary>The clientId property</summary>
+        public Guid? ClientId { get; set; }
+        /// <summary>The id property</summary>
+        public Guid? Id { get; set; }
+        /// <summary>The productId property</summary>
+        public Guid? ProductId { get; set; }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.UpdateCategoryExternalDto"/></returns>
+        /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.FavoriteResponseDto"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.UpdateCategoryExternalDto CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.FavoriteResponseDto CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
-            return new global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.UpdateCategoryExternalDto();
+            return new global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.FavoriteResponseDto();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -46,8 +38,10 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "code", n => { Code = n.GetStringValue(); } },
-                { "name", n => { Name = n.GetStringValue(); } },
+                { "addedAt", n => { AddedAt = n.GetDateTimeOffsetValue(); } },
+                { "clientId", n => { ClientId = n.GetGuidValue(); } },
+                { "id", n => { Id = n.GetGuidValue(); } },
+                { "productId", n => { ProductId = n.GetGuidValue(); } },
             };
         }
         /// <summary>
@@ -57,8 +51,10 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteStringValue("code", Code);
-            writer.WriteStringValue("name", Name);
+            writer.WriteDateTimeOffsetValue("addedAt", AddedAt);
+            writer.WriteGuidValue("clientId", ClientId);
+            writer.WriteGuidValue("id", Id);
+            writer.WriteGuidValue("productId", ProductId);
         }
     }
 }

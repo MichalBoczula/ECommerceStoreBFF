@@ -5,21 +5,25 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
-namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
+namespace ECommerceStoreBFF.Infrastructure.Generated.Orders.Models
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
-    public partial class CategoryDto : IParsable
+    public partial class ProductVersionResponseDto : IParsable
     #pragma warning restore CS1591
     {
-        /// <summary>The code property</summary>
+        /// <summary>The brand property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public string? Code { get; set; }
+        public string? Brand { get; set; }
 #nullable restore
 #else
-        public string Code { get; set; }
+        public string Brand { get; set; }
 #endif
+        /// <summary>The createdAt property</summary>
+        public DateTimeOffset? CreatedAt { get; set; }
+        /// <summary>The deactivatedAt property</summary>
+        public DateTimeOffset? DeactivatedAt { get; set; }
         /// <summary>The id property</summary>
         public Guid? Id { get; set; }
         /// <summary>The isActive property</summary>
@@ -32,15 +36,27 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
 #else
         public string Name { get; set; }
 #endif
+        /// <summary>The priceAmount property</summary>
+        public double? PriceAmount { get; set; }
+        /// <summary>The priceCurrency property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? PriceCurrency { get; set; }
+#nullable restore
+#else
+        public string PriceCurrency { get; set; }
+#endif
+        /// <summary>The productId property</summary>
+        public Guid? ProductId { get; set; }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.CategoryDto"/></returns>
+        /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ProductVersionResponseDto"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.CategoryDto CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ProductVersionResponseDto CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             if(ReferenceEquals(parseNode, null)) throw new ArgumentNullException(nameof(parseNode));
-            return new global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.CategoryDto();
+            return new global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ProductVersionResponseDto();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -50,10 +66,15 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "code", n => { Code = n.GetStringValue(); } },
+                { "brand", n => { Brand = n.GetStringValue(); } },
+                { "createdAt", n => { CreatedAt = n.GetDateTimeOffsetValue(); } },
+                { "deactivatedAt", n => { DeactivatedAt = n.GetDateTimeOffsetValue(); } },
                 { "id", n => { Id = n.GetGuidValue(); } },
                 { "isActive", n => { IsActive = n.GetBoolValue(); } },
                 { "name", n => { Name = n.GetStringValue(); } },
+                { "priceAmount", n => { PriceAmount = n.GetDoubleValue(); } },
+                { "priceCurrency", n => { PriceCurrency = n.GetStringValue(); } },
+                { "productId", n => { ProductId = n.GetGuidValue(); } },
             };
         }
         /// <summary>
@@ -63,10 +84,15 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteStringValue("code", Code);
+            writer.WriteStringValue("brand", Brand);
+            writer.WriteDateTimeOffsetValue("createdAt", CreatedAt);
+            writer.WriteDateTimeOffsetValue("deactivatedAt", DeactivatedAt);
             writer.WriteGuidValue("id", Id);
             writer.WriteBoolValue("isActive", IsActive);
             writer.WriteStringValue("name", Name);
+            writer.WriteDoubleValue("priceAmount", PriceAmount);
+            writer.WriteStringValue("priceCurrency", PriceCurrency);
+            writer.WriteGuidValue("productId", ProductId);
         }
     }
 }

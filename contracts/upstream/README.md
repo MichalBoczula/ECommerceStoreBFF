@@ -1,6 +1,6 @@
 # Upstream API baseline
 
-These OpenAPI files describe the exact API versions selected for the BFF client refresh. `manifest.json` records the Docker Hub digest and the SHA-256 of each formatted specification. Generate the Kiota clients in BFF/2 from these three files.
+These OpenAPI files describe the exact API versions selected for the BFF client refresh. `manifest.json` records the Docker Hub digest and the SHA-256 of each formatted specification. Run `bash scripts/generate-clients.sh` to restore the pinned Kiota tool and regenerate all three clients. Products and Users map to their matching generated directories; the Invoice contract maps to `Generated/Orders` to preserve the existing BFF client name and namespace.
 
 | File | Export source |
 | --- | --- |

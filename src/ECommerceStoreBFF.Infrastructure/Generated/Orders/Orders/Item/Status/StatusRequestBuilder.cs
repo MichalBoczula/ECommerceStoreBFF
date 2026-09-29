@@ -42,6 +42,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Orders.Orders.Item.Status
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ApiProblemDetails">When receiving a 400 status code</exception>
         /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.NotFoundProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ConflictProblemDetails">When receiving a 409 status code</exception>
         /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -58,6 +59,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Orders.Orders.Item.Status
             {
                 { "400", global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
                 { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.NotFoundProblemDetails.CreateFromDiscriminatorValue },
+                { "409", global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ConflictProblemDetails.CreateFromDiscriminatorValue },
                 { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ProblemDetails.CreateFromDiscriminatorValue },
             };
             return await RequestAdapter.SendAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.OrderResponseDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.OrderResponseDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);

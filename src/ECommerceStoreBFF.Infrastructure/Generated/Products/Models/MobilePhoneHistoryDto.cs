@@ -20,8 +20,6 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
 #else
         public string Camera { get; set; }
 #endif
-        /// <summary>The categoryId property</summary>
-        public Guid? CategoryId { get; set; }
         /// <summary>The changedAt property</summary>
         public DateTimeOffset? ChangedAt { get; set; }
         /// <summary>The commonDescription property</summary>
@@ -119,7 +117,6 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "camera", n => { Camera = n.GetStringValue(); } },
-                { "categoryId", n => { CategoryId = n.GetGuidValue(); } },
                 { "changedAt", n => { ChangedAt = n.GetDateTimeOffsetValue(); } },
                 { "commonDescription", n => { CommonDescription = n.GetObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.CommonDescriptionDto>(global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.CommonDescriptionDto.CreateFromDiscriminatorValue); } },
                 { "connectivity", n => { Connectivity = n.GetObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ConnectivityDto>(global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ConnectivityDto.CreateFromDiscriminatorValue); } },
@@ -145,7 +142,6 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteStringValue("camera", Camera);
-            writer.WriteGuidValue("categoryId", CategoryId);
             writer.WriteDateTimeOffsetValue("changedAt", ChangedAt);
             writer.WriteObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.CommonDescriptionDto>("commonDescription", CommonDescription);
             writer.WriteObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ConnectivityDto>("connectivity", Connectivity);

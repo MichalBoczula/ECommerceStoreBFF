@@ -34,15 +34,16 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.Customers.Item.Indivi
         {
         }
         /// <summary>
-        /// Modifies existing core individual metrics (names, contact info, billing/shipping directions) for the target customer profile identifier.
+        /// Updates individual details. A concurrent customer change returns 409; a customer removed before saving returns 404.
         /// </summary>
         /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.CustomerResponseDto"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails">When receiving a 400 status code</exception>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.NotFoundProblemDetails">When receiving a 404 status code</exception>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ProblemDetails">When receiving a 500 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails">When receiving a 409 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.CustomerResponseDto?> PutAsync(global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.UpdateIndividualDataRequestDto body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -57,13 +58,14 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.Customers.Item.Indivi
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
                 { "400", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
-                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.NotFoundProblemDetails.CreateFromDiscriminatorValue },
-                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "409", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
             };
             return await RequestAdapter.SendAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.CustomerResponseDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.CustomerResponseDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Modifies existing core individual metrics (names, contact info, billing/shipping directions) for the target customer profile identifier.
+        /// Updates individual details. A concurrent customer change returns 409; a customer removed before saving returns 404.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>

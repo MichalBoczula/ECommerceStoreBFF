@@ -22,27 +22,30 @@ public static class DependencyInjection
         services.AddHttpClient<ProductsApiClient>(client =>
         {
             client.BaseAddress = new Uri(bffBaseUrl);
-        }).AddTypedClient((httpClient, sp) =>
+        }).AddTypedClient((httpClient, _) =>
         {
             var adapter = new HttpClientRequestAdapter(authProvider, httpClient: httpClient);
+            adapter.BaseUrl = httpClient.BaseAddress!.ToString().TrimEnd('/');
             return new ProductsApiClient(adapter);
         });
 
         services.AddHttpClient<UsersApiClient>(client =>
         {
             client.BaseAddress = new Uri(bffBaseUrl);
-        }).AddTypedClient((httpClient, sp) =>
+        }).AddTypedClient((httpClient, _) =>
         {
             var adapter = new HttpClientRequestAdapter(authProvider, httpClient: httpClient);
+            adapter.BaseUrl = httpClient.BaseAddress!.ToString().TrimEnd('/');
             return new UsersApiClient(adapter);
         });
 
         services.AddHttpClient<OrdersApiClient>(client =>
         {
             client.BaseAddress = new Uri(bffBaseUrl);
-        }).AddTypedClient((httpClient, sp) =>
+        }).AddTypedClient((httpClient, _) =>
         {
             var adapter = new HttpClientRequestAdapter(authProvider, httpClient: httpClient);
+            adapter.BaseUrl = httpClient.BaseAddress!.ToString().TrimEnd('/');
             return new OrdersApiClient(adapter);
         });
 

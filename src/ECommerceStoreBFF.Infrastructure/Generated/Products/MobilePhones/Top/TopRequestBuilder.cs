@@ -34,13 +34,12 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Top
         {
         }
         /// <summary>
-        /// Returns a list of top mobile phones.
+        /// Returns the three most recently changed active mobile phones, ordered by ChangedAt descending, then Id descending. Top means recent changes, not sales popularity.
         /// </summary>
         /// <returns>A List&lt;global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.TopMobilePhoneDto&gt;</returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.NotFoundProblemDetails">When receiving a 404 status code</exception>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails">When receiving a 500 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<List<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.TopMobilePhoneDto>?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -53,14 +52,13 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Top
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.NotFoundProblemDetails.CreateFromDiscriminatorValue },
-                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
             };
             var collectionResult = await RequestAdapter.SendCollectionAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.TopMobilePhoneDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.TopMobilePhoneDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
             return collectionResult?.AsList();
         }
         /// <summary>
-        /// Returns a list of top mobile phones.
+        /// Returns the three most recently changed active mobile phones, ordered by ChangedAt descending, then Id descending. Top means recent changes, not sales popularity.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>

@@ -34,12 +34,12 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.UsersDocumentation.Fl
         {
         }
         /// <summary>
-        /// Returns flow descriptors mapped by descriptor name, including create, read, and company update flows.
+        /// Returns flow descriptors mapped by descriptor name, including customer, admin, and favorite workflows.
         /// </summary>
         /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.FlowDescriptorsResponseDto"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ProblemDetails">When receiving a 500 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.FlowDescriptorsResponseDto?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -52,12 +52,12 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.UsersDocumentation.Fl
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
             };
             return await RequestAdapter.SendAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.FlowDescriptorsResponseDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.FlowDescriptorsResponseDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Returns flow descriptors mapped by descriptor name, including create, read, and company update flows.
+        /// Returns flow descriptors mapped by descriptor name, including customer, admin, and favorite workflows.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>

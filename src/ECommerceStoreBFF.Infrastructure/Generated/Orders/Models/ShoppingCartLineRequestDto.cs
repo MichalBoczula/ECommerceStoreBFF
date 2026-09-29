@@ -12,36 +12,10 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Orders.Models
     public partial class ShoppingCartLineRequestDto : IParsable
     #pragma warning restore CS1591
     {
-        /// <summary>The brand property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Brand { get; set; }
-#nullable restore
-#else
-        public string Brand { get; set; }
-#endif
-        /// <summary>The name property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? Name { get; set; }
-#nullable restore
-#else
-        public string Name { get; set; }
-#endif
         /// <summary>The productId property</summary>
         public Guid? ProductId { get; set; }
         /// <summary>The quantity property</summary>
         public int? Quantity { get; set; }
-        /// <summary>The unitPriceAmount property</summary>
-        public double? UnitPriceAmount { get; set; }
-        /// <summary>The unitPriceCurrency property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? UnitPriceCurrency { get; set; }
-#nullable restore
-#else
-        public string UnitPriceCurrency { get; set; }
-#endif
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
@@ -60,12 +34,8 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Orders.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
-                { "brand", n => { Brand = n.GetStringValue(); } },
-                { "name", n => { Name = n.GetStringValue(); } },
                 { "productId", n => { ProductId = n.GetGuidValue(); } },
                 { "quantity", n => { Quantity = n.GetIntValue(); } },
-                { "unitPriceAmount", n => { UnitPriceAmount = n.GetDoubleValue(); } },
-                { "unitPriceCurrency", n => { UnitPriceCurrency = n.GetStringValue(); } },
             };
         }
         /// <summary>
@@ -75,12 +45,8 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Orders.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
-            writer.WriteStringValue("brand", Brand);
-            writer.WriteStringValue("name", Name);
             writer.WriteGuidValue("productId", ProductId);
             writer.WriteIntValue("quantity", Quantity);
-            writer.WriteDoubleValue("unitPriceAmount", UnitPriceAmount);
-            writer.WriteStringValue("unitPriceCurrency", UnitPriceCurrency);
         }
     }
 }
