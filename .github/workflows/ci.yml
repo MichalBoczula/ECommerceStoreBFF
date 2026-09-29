@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Verify source and scripts
+        run: bash scripts/ci.sh source
+      - name: Restore and build with NuGet Audit
+        run: bash scripts/ci.sh build
+      - name: Verify handwritten formatting
+        run: bash scripts/ci.sh format
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Test BFF with SQL Server, MongoDB and three upstream APIs
+        run: VERIFY_SUMMARY_FILE="$GITHUB_STEP_SUMMARY" bash scripts/ci.sh test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bff-integration-test-results
+          path: artifacts/verification/test/**/*.trx
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bff-handwritten-coverage
+          path: artifacts/verification/test/**/coverage.cobertura.xml
+          if-no-files-found: warn
+
+  quality-gate:
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [build, integration-tests, secret-scan, dependency-review]
+    steps:
+      - name: Require all mandatory jobs
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BUILD: ${{ needs.build.result }}
+          INTEGRATION: ${{ needs.integration-tests.result }}
+          SECRET_SCAN: ${{ needs.secret-scan.result }}
+          DEPENDENCY_REVIEW: ${{ needs.dependency-review.result }}
+        run: |
+          for job in BUILD INTEGRATION SECRET_SCAN; do
+            if [[ "${!job}" != success ]]; then
+              echo "$job must succeed; actual result: ${!job}" >&2
+              exit 1
+            fi
+          done
+          expected=success
+          if [[ "$EVENT_NAME" == push ]]; then expected=skipped; fi
+          if [[ "$DEPENDENCY_REVIEW" != "$expected" ]]; then
+            echo "Dependency Review must be $expected; actual result: $DEPENDENCY_REVIEW" >&2
+            exit 1
+          fi
