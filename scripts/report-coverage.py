@@ -3,15 +3,20 @@
 
 import sys
 import xml.etree.ElementTree as ET
+from hashlib import sha256
 from pathlib import Path
+from shutil import copyfile
 
 if len(sys.argv) != 3:
     raise SystemExit("Usage: report-coverage.py RESULTS_DIR SUMMARY_FILE")
 
 directory, summary_file = Path(sys.argv[1]), Path(sys.argv[2])
 reports = list(directory.rglob("coverage.cobertura.xml"))
-if len(reports) != 1:
-    raise SystemExit(f"Expected one Cobertura report, found {len(reports)} in {directory}")
+if not reports:
+    raise SystemExit(f"Missing Cobertura report in {directory}")
+digests = {sha256(report.read_bytes()).hexdigest() for report in reports}
+if len(digests) != 1:
+    raise SystemExit(f"Conflicting Cobertura reports in {directory}")
 
 root = ET.parse(reports[0]).getroot()
 files = [item.get("filename", "").replace("\\", "/") for item in root.findall(".//class")]
@@ -29,6 +34,7 @@ if not (0 < valid and 0 <= covered <= valid):
     raise SystemExit(f"Invalid handwritten coverage: {covered}/{valid}")
 
 rate = 100 * covered / valid
+copyfile(reports[0], directory / "handwritten-coverage.cobertura.xml")
 summary = f"\n## Handwritten BFF coverage\n\n{covered}/{valid} lines ({rate:.1f}%). Generated Kiota sources excluded.\n"
 print(summary)
 with summary_file.open("a", encoding="utf-8") as output:

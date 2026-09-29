@@ -71,7 +71,7 @@ jobs:
         if: always()
         with:
           name: bff-handwritten-coverage
-          path: artifacts/verification/test/**/coverage.cobertura.xml
+          path: artifacts/verification/test/handwritten-coverage.cobertura.xml
           if-no-files-found: warn
 
   quality-gate:
