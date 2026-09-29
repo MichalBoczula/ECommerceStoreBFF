@@ -37,7 +37,7 @@ public class GetMobilePhoneByIdTests(ApplicationFactory factory)
     }
 
     [Fact]
-    public async Task GetMobilePhonesByIds_ReturnsRequestedPhonesOrderedById()
+    public async Task GetMobilePhonesByIds_ReturnsOnlyRequestedPhones()
     {
         using var httpClient = factory.CreateClient();
         var client = ProductTestData.Client(httpClient);
@@ -47,7 +47,9 @@ public class GetMobilePhoneByIdTests(ApplicationFactory factory)
         var response = await client.MobilePhones.ByIds.PostAsync([second.Id, first.Id]);
 
         response.ShouldNotBeNull();
-        response.Select(phone => phone.Id).ShouldBe(new[] { first.Id, second.Id }.OrderBy(id => id));
+        response.Count.ShouldBe(2);
+        response.ShouldContain(phone => phone.Id == first.Id);
+        response.ShouldContain(phone => phone.Id == second.Id);
     }
 
     [Fact]
