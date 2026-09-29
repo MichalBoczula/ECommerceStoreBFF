@@ -38,7 +38,8 @@ public class AdminTests(ApplicationFactory factory)
 
         var updated = await api.Admins[created.Id!.Value].PutAsync(new UpdateAdminProfileRequestDto
         {
-            FullName = "Admin Zmieniony", Email = newEmail
+            FullName = "Admin Zmieniony",
+            Email = newEmail
         });
         var read = await api.Admins.External[externalId].GetAsync();
 
