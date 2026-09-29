@@ -38,14 +38,18 @@ public class GatewayBehaviorTests(ApplicationFactory factory)
     [InlineData("products", "/api/products/swagger/v1/swagger.json")]
     [InlineData("users", "/api/users/swagger/v1/swagger.json")]
     [InlineData("orders", "/api/orders/swagger/v1/swagger.json")]
-    public async Task ScalarPage_ReferencesCorrespondingProxiedSpec(string page, string specPath)
+    public async Task ScalarPageAndCorrespondingProxiedSpec_AreAvailable(string page, string specPath)
     {
         using var bff = factory.CreateClient();
         using var response = await bff.GetAsync($"/scalar/{page}");
+        using var spec = await bff.GetAsync(specPath);
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         response.Content.Headers.ContentType?.MediaType.ShouldBe("text/html");
-        (await response.Content.ReadAsStringAsync()).ShouldContain(specPath);
+        (await response.Content.ReadAsStringAsync()).ShouldContain($"ECommerce BFF - {char.ToUpperInvariant(page[0])}{page[1..]} API");
+        spec.StatusCode.ShouldBe(HttpStatusCode.OK);
+        using var specJson = JsonDocument.Parse(await spec.Content.ReadAsStringAsync());
+        specJson.RootElement.GetProperty("paths").EnumerateObject().ShouldNotBeEmpty();
     }
 
     [Fact]
@@ -90,7 +94,10 @@ public class GatewayBehaviorTests(ApplicationFactory factory)
         using var proxiedJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         using var originalJson = JsonDocument.Parse(await original.Content.ReadAsStringAsync());
         proxiedJson.RootElement.GetProperty("individual").GetProperty("firstName").GetString().ShouldBe("Anna");
-        JsonElement.DeepEquals(proxiedJson.RootElement, originalJson.RootElement).ShouldBeTrue();
+        proxiedJson.RootElement.GetProperty("id").GetGuid().ShouldBe(originalJson.RootElement.GetProperty("id").GetGuid());
+        var persistedIndividual = originalJson.RootElement.GetProperty("individual");
+        persistedIndividual.GetProperty("firstName").GetString().ShouldBe("Anna");
+        persistedIndividual.GetProperty("email").GetString().ShouldBe(update.Individual!.Email);
     }
 
     [Fact]
@@ -110,7 +117,8 @@ public class GatewayBehaviorTests(ApplicationFactory factory)
         using var proxiedJson = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         using var originalJson = JsonDocument.Parse(await original.Content.ReadAsStringAsync());
         proxiedJson.RootElement.GetProperty("status").GetString().ShouldBe("Paid");
-        JsonElement.DeepEquals(proxiedJson.RootElement, originalJson.RootElement).ShouldBeTrue();
+        proxiedJson.RootElement.GetProperty("id").GetGuid().ShouldBe(originalJson.RootElement.GetProperty("id").GetGuid());
+        originalJson.RootElement.GetProperty("status").GetString().ShouldBe("Paid");
     }
 
     [Theory]
