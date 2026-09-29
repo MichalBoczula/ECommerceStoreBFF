@@ -72,7 +72,10 @@ internal static class UsersTestData
 
     private static AddressRequestDto Address() => new()
     {
-        PostalCode = "00-001", City = "Warsaw", Street = "Main Street",
-        BuildingNumber = "10", ApartmentNumber = "2"
+        PostalCode = "00-001",
+        City = "Warsaw",
+        Street = "Main Street",
+        BuildingNumber = "10",
+        ApartmentNumber = "2"
     };
 }
