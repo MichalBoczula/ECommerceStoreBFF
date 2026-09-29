@@ -40,8 +40,9 @@ public class OrderAndInvoiceTests(ApplicationFactory factory)
         created.Lines.ShouldNotBeNull();
         created.Lines.Count.ShouldBe(1);
         created.Lines[0].Quantity.ShouldBe(2);
-        created.Lines[0].ProductVersion.ShouldNotBeNull();
-        created.Lines[0].ProductVersion.ProductId.ShouldBe(productId);
+        var productVersion = created.Lines[0].ProductVersion;
+        productVersion.ShouldNotBeNull();
+        productVersion.ProductId.ShouldBe(productId);
 
         var cartAfterCheckout = await orders.ShoppingCarts.Client[clientId].GetAsync();
         cartAfterCheckout.ShouldNotBeNull();

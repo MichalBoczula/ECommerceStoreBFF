@@ -24,7 +24,7 @@ internal static class OrdersTestData
         ClientName = "Jan Kowalski",
         PostalCode = "00-001",
         City = "Warsaw",
-        Street = "Main Street",
+        Street = "Main.St",
         BuildingNumber = "10",
         ApartmentNumber = "2",
         PhoneNumber = "123456789",
@@ -60,7 +60,7 @@ internal static class OrdersTestData
         response.StatusCode.ShouldBe(status);
         response.Content.Headers.ContentType?.MediaType.ShouldBe("application/problem+json");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        json.RootElement.GetProperty("statusCode").GetInt32().ShouldBe((int)status);
+        json.RootElement.GetProperty("status").GetInt32().ShouldBe((int)status);
         json.RootElement.GetProperty("title").GetString().ShouldNotBeNullOrWhiteSpace();
         json.RootElement.GetProperty("detail").GetString().ShouldNotBeNullOrWhiteSpace();
     }
