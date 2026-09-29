@@ -1,82 +1,45 @@
-﻿using ECommerceStoreBFF.AcceptanceTests;
-using ECommerceStoreBFF.Infrastructure.Generated.Products;
+using ECommerceStoreBFF.AcceptanceTests;
 using ECommerceStoreBFF.Infrastructure.Generated.Products.Models;
-using Microsoft.Kiota.Abstractions.Authentication;
-using Microsoft.Kiota.Http.HttpClientLibrary;
 using Shouldly;
 
-namespace ECommerceStoreBFF.IntegrationTests.Features.Products
+namespace ECommerceStoreBFF.IntegrationTests.Features.Products;
+
+[Collection("Api Test Collection")]
+public class FilterMobilePhonesTests(ApplicationFactory factory)
 {
-    [Collection("Api Test Collection")]
-    public class FilterMobilePhonesTests
+    [Fact]
+    public async Task FilterMobilePhones_ByBrand_ContainsCreatedPhoneAndOnlyMatchingBrand()
     {
-        private readonly ApplicationFactory _factory;
+        using var httpClient = factory.CreateClient();
+        var client = ProductTestData.Client(httpClient);
+        var created = await ProductTestData.CreatePhoneAsync(client, brand: "Apple");
 
-        public FilterMobilePhonesTests(ApplicationFactory factory)
+        var response = await client.MobilePhones.Filter.PostAsync(new MobilePhoneFilterDto
         {
-            _factory = factory;
-        }
+            Brand = MobilePhonesBrand.Apple
+        });
 
-        [Fact]
-        public async Task FilterMobilePhones_ByBrand_ShouldReturnOnlyPhonesFromThatBrand_200()
+        response.ShouldNotBeNull();
+        response.ShouldContain(phone => phone.Id == created.Id);
+        response.ShouldAllBe(phone => phone.Brand == "Apple");
+    }
+
+    [Fact]
+    public async Task FilterMobilePhones_ByPriceRange_ContainsCreatedPhoneWithinRange()
+    {
+        using var httpClient = factory.CreateClient();
+        var client = ProductTestData.Client(httpClient);
+        var price = Random.Shared.Next(20_000, 80_000);
+        var created = await ProductTestData.CreatePhoneAsync(client, price: price);
+
+        var response = await client.MobilePhones.Filter.PostAsync(new MobilePhoneFilterDto
         {
-            // Arrange
-            var httpClient = _factory.CreateClient();
-            var adapter = new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient);
-            var client = new ProductsApiClient(adapter);
+            MinimalPrice = price - 1,
+            MaximalPrice = price + 1
+        });
 
-            var filterRequest = new MobilePhoneFilterDto
-            {
-                Brand = MobilePhonesBrand.Apple,
-                MinimalPrice = null,
-                MaximalPrice = null
-            };
-
-            // Act
-            var response = await client.MobilePhones.Filter.PostAsync(filterRequest);
-
-            // Assert
-            response.ShouldNotBeNull();
-            response.ShouldNotBeEmpty();
-
-            foreach (var phone in response)
-            {
-                phone.Brand.ShouldBe("Apple");
-            }
-        }
-
-        [Fact]
-        public async Task FilterMobilePhones_ByPriceRange_ShouldReturnExactlyTwoPhones_200()
-        {
-            // Arrange
-            var httpClient = _factory.CreateClient();
-            var adapter = new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient);
-            var client = new ProductsApiClient(adapter);
-
-            var filterRequest = new MobilePhoneFilterDto
-            {
-                Brand = null,
-                MinimalPrice = 2000.00d,
-                MaximalPrice = 3000.00d
-            };
-
-            // Act
-            var response = await client.MobilePhones.Filter.PostAsync(filterRequest);
-
-            // Assert
-            response.ShouldNotBeNull();
-            response.ShouldNotBeEmpty();
-
-            response.Count.ShouldBe(1);
-
-            foreach (var phone in response)
-            {
-                phone.Price.ShouldNotBeNull();
-                phone.Price.Amount.ShouldNotBeNull();
-
-                phone.Price.Amount.Value.ShouldBeGreaterThanOrEqualTo(2000.00d);
-                phone.Price.Amount.Value.ShouldBeLessThanOrEqualTo(3000.00d);
-            }
-        }
+        response.ShouldNotBeNull();
+        response.ShouldContain(phone => phone.Id == created.Id);
+        response.ShouldAllBe(phone => phone.Price != null && phone.Price.Amount >= price - 1 && phone.Price.Amount <= price + 1);
     }
 }
