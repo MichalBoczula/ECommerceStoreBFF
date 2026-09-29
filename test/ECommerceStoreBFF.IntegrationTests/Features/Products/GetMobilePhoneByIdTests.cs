@@ -1,6 +1,7 @@
 using ECommerceStoreBFF.AcceptanceTests;
 using Shouldly;
 using System.Net;
+using System.Net.Http.Json;
 
 namespace ECommerceStoreBFF.IntegrationTests.Features.Products;
 
@@ -36,16 +37,29 @@ public class GetMobilePhoneByIdTests(ApplicationFactory factory)
     }
 
     [Fact]
-    public async Task GetMobilePhonesByIds_ReturnsOnlyRequestedExistingPhone()
+    public async Task GetMobilePhonesByIds_ReturnsRequestedPhonesOrderedById()
+    {
+        using var httpClient = factory.CreateClient();
+        var client = ProductTestData.Client(httpClient);
+        var first = await ProductTestData.CreatePhoneAsync(client);
+        var second = await ProductTestData.CreatePhoneAsync(client);
+
+        var response = await client.MobilePhones.ByIds.PostAsync([second.Id, first.Id]);
+
+        response.ShouldNotBeNull();
+        response.Select(phone => phone.Id).ShouldBe(new[] { first.Id, second.Id }.OrderBy(id => id));
+    }
+
+    [Fact]
+    public async Task GetMobilePhonesByIds_WhenOneIsMissing_ReturnsNotFound()
     {
         using var httpClient = factory.CreateClient();
         var client = ProductTestData.Client(httpClient);
         var created = await ProductTestData.CreatePhoneAsync(client);
 
-        var response = await client.MobilePhones.ByIds.PostAsync([created.Id, Guid.NewGuid()]);
+        using var response = await httpClient.PostAsJsonAsync(
+            "/mobile-phones/by-ids", new[] { created.Id!.Value, Guid.NewGuid() });
 
-        response.ShouldNotBeNull();
-        response.Count.ShouldBe(1);
-        response[0].Id.ShouldBe(created.Id);
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 }
