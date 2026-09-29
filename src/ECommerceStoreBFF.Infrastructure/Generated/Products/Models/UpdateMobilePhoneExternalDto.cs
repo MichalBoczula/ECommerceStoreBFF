@@ -20,8 +20,6 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
 #else
         public string Camera { get; set; }
 #endif
-        /// <summary>The categoryId property</summary>
-        public Guid? CategoryId { get; set; }
         /// <summary>The commonDescription property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -109,7 +107,6 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
             return new Dictionary<string, Action<IParseNode>>
             {
                 { "camera", n => { Camera = n.GetStringValue(); } },
-                { "categoryId", n => { CategoryId = n.GetGuidValue(); } },
                 { "commonDescription", n => { CommonDescription = n.GetObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.CommonDescriptionExtrernalDto>(global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.CommonDescriptionExtrernalDto.CreateFromDiscriminatorValue); } },
                 { "connectivity", n => { Connectivity = n.GetObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.UpdateConnectivityExternalDto>(global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.UpdateConnectivityExternalDto.CreateFromDiscriminatorValue); } },
                 { "description2", n => { Description2 = n.GetStringValue(); } },
@@ -130,7 +127,6 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
             writer.WriteStringValue("camera", Camera);
-            writer.WriteGuidValue("categoryId", CategoryId);
             writer.WriteObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.CommonDescriptionExtrernalDto>("commonDescription", CommonDescription);
             writer.WriteObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.UpdateConnectivityExternalDto>("connectivity", Connectivity);
             writer.WriteStringValue("description2", Description2);

@@ -1,6 +1,6 @@
 {
-  "descriptionHash": "CBCDD8978D7DB42E82CCDEB6737566A885BF8A067063E02CC59E28873EEF169BDFC5B50A207EC4E60103C462A717567AB301D3DEDD0E450643CA4B870979FE38",
-  "descriptionLocation": "http://localhost:3000/api/orders/swagger/v1/swagger.json",
+  "descriptionHash": "2D962AFD2D3D07FFD3B811DB3192C1A83CFBC280977E06F80F97CD8A59D462E8EA5A87057716E247BCBCF93692FC32378A3B38E8158AE179F44256AE52E66DEF",
+  "descriptionLocation": "../../../../contracts/upstream/invoice.openapi.json",
   "lockFileVersion": "1.0.0",
   "kiotaVersion": "1.34.1",
   "clientClassName": "OrdersApiClient",

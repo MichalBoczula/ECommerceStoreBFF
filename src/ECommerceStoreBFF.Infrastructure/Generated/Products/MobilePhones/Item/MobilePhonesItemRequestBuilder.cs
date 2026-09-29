@@ -40,13 +40,15 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item
         {
         }
         /// <summary>
-        /// Soft deletes a mobile phone and returns the deactivated resource.
+        /// Soft deletes a mobile phone. Repeating a delete is a successful no-op; an overlapping update/delete returns 409, or 404 if the row was removed during the request.
         /// </summary>
         /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 400 status code</exception>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails">When receiving a 500 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 409 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto?> DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -60,18 +62,20 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
                 { "400", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
-                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "409", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
             };
             return await RequestAdapter.SendAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Returns the mobile phone details when the Id exists; 404 otherwise.
+        /// Returns the mobile phone details when the Id exists, including inactive phones; 404 otherwise.
         /// </summary>
         /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.NotFoundProblemDetails">When receiving a 404 status code</exception>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails">When receiving a 500 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -84,20 +88,22 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.NotFoundProblemDetails.CreateFromDiscriminatorValue },
-                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
             };
             return await RequestAdapter.SendAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Updates an existing mobile phone and returns the updated resource.
+        /// Updates a mobile phone. An unchanged request is a successful no-op; a concurrent write returns 409, or 404 if the row was removed during the request.
         /// </summary>
         /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 400 status code</exception>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails">When receiving a 500 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 409 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto?> PutAsync(global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.UpdateMobilePhoneExternalDto body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -112,12 +118,14 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
                 { "400", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
-                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "409", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
             };
             return await RequestAdapter.SendAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Soft deletes a mobile phone and returns the deactivated resource.
+        /// Soft deletes a mobile phone. Repeating a delete is a successful no-op; an overlapping update/delete returns 409, or 404 if the row was removed during the request.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -136,7 +144,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item
             return requestInfo;
         }
         /// <summary>
-        /// Returns the mobile phone details when the Id exists; 404 otherwise.
+        /// Returns the mobile phone details when the Id exists, including inactive phones; 404 otherwise.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -155,7 +163,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item
             return requestInfo;
         }
         /// <summary>
-        /// Updates an existing mobile phone and returns the updated resource.
+        /// Updates a mobile phone. An unchanged request is a successful no-op; a concurrent write returns 409, or 404 if the row was removed during the request.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>

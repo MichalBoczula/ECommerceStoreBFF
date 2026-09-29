@@ -60,16 +60,16 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.Customers.Item.Compan
         {
         }
         /// <summary>
-        /// Appends a newly structured commercial corporate tax record entity into the internal collection profile context.
+        /// Adds company data. Duplicate tax IDs and concurrent customer changes return 409; a customer removed before saving returns 404.
         /// </summary>
         /// <returns>A <see cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.CustomerResponseDto"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails">When receiving a 400 status code</exception>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.NotFoundProblemDetails">When receiving a 404 status code</exception>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ConflictProblemDetails">When receiving a 409 status code</exception>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ProblemDetails">When receiving a 500 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails">When receiving a 409 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.CustomerResponseDto?> PostAsync(global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.AddCompanyRequestDto body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -84,14 +84,14 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.Customers.Item.Compan
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
                 { "400", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
-                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.NotFoundProblemDetails.CreateFromDiscriminatorValue },
-                { "409", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ConflictProblemDetails.CreateFromDiscriminatorValue },
-                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "409", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
             };
             return await RequestAdapter.SendAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.CustomerResponseDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.CustomerResponseDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Appends a newly structured commercial corporate tax record entity into the internal collection profile context.
+        /// Adds company data. Duplicate tax IDs and concurrent customer changes return 409; a customer removed before saving returns 404.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>

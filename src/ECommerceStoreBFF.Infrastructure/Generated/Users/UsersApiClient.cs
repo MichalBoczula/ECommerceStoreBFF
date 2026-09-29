@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 using ECommerceStoreBFF.Infrastructure.Generated.Users.Admins;
 using ECommerceStoreBFF.Infrastructure.Generated.Users.Customers;
+using ECommerceStoreBFF.Infrastructure.Generated.Users.Favorites;
 using ECommerceStoreBFF.Infrastructure.Generated.Users.UsersDocumentation;
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions;
@@ -30,6 +31,11 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users
         public global::ECommerceStoreBFF.Infrastructure.Generated.Users.Customers.CustomersRequestBuilder Customers
         {
             get => new global::ECommerceStoreBFF.Infrastructure.Generated.Users.Customers.CustomersRequestBuilder(PathParameters, RequestAdapter);
+        }
+        /// <summary>The favorites property</summary>
+        public global::ECommerceStoreBFF.Infrastructure.Generated.Users.Favorites.FavoritesRequestBuilder Favorites
+        {
+            get => new global::ECommerceStoreBFF.Infrastructure.Generated.Users.Favorites.FavoritesRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The usersDocumentation property</summary>
         public global::ECommerceStoreBFF.Infrastructure.Generated.Users.UsersDocumentation.UsersDocumentationRequestBuilder UsersDocumentation

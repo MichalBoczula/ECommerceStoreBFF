@@ -26,16 +26,6 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Orders.Models
 #else
         public List<global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ShoppingCartLineResponseDto> Lines { get; set; }
 #endif
-        /// <summary>The totalAmount property</summary>
-        public double? TotalAmount { get; set; }
-        /// <summary>The totalCurrency property</summary>
-#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
-#nullable enable
-        public string? TotalCurrency { get; set; }
-#nullable restore
-#else
-        public string TotalCurrency { get; set; }
-#endif
         /// <summary>The updatedAt property</summary>
         public DateTimeOffset? UpdatedAt { get; set; }
         /// <summary>
@@ -60,8 +50,6 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Orders.Models
                 { "createdAt", n => { CreatedAt = n.GetDateTimeOffsetValue(); } },
                 { "id", n => { Id = n.GetGuidValue(); } },
                 { "lines", n => { Lines = n.GetCollectionOfObjectValues<global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ShoppingCartLineResponseDto>(global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ShoppingCartLineResponseDto.CreateFromDiscriminatorValue)?.AsList(); } },
-                { "totalAmount", n => { TotalAmount = n.GetDoubleValue(); } },
-                { "totalCurrency", n => { TotalCurrency = n.GetStringValue(); } },
                 { "updatedAt", n => { UpdatedAt = n.GetDateTimeOffsetValue(); } },
             };
         }
@@ -76,8 +64,6 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Orders.Models
             writer.WriteDateTimeOffsetValue("createdAt", CreatedAt);
             writer.WriteGuidValue("id", Id);
             writer.WriteCollectionOfObjectValues<global::ECommerceStoreBFF.Infrastructure.Generated.Orders.Models.ShoppingCartLineResponseDto>("lines", Lines);
-            writer.WriteDoubleValue("totalAmount", TotalAmount);
-            writer.WriteStringValue("totalCurrency", TotalCurrency);
             writer.WriteDateTimeOffsetValue("updatedAt", UpdatedAt);
         }
     }

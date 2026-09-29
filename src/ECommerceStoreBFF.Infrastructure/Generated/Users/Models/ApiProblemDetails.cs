@@ -15,6 +15,14 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.Models
     {
         /// <summary>Stores additional data not described in the OpenAPI description found when deserializing. Can be used for serialization as well.</summary>
         public IDictionary<string, object> AdditionalData { get; set; }
+        /// <summary>The code property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? Code { get; set; }
+#nullable restore
+#else
+        public string Code { get; set; }
+#endif
         /// <summary>The detail property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -41,6 +49,14 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.Models
 #endif
         /// <summary>The primary error message.</summary>
         public override string Message { get => base.Message; }
+        /// <summary>The missingProperties property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public List<string>? MissingProperties { get; set; }
+#nullable restore
+#else
+        public List<string> MissingProperties { get; set; }
+#endif
         /// <summary>The status property</summary>
         public int? Status { get; set; }
         /// <summary>The title property</summary>
@@ -92,9 +108,11 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.Models
         {
             return new Dictionary<string, Action<IParseNode>>
             {
+                { "code", n => { Code = n.GetStringValue(); } },
                 { "detail", n => { Detail = n.GetStringValue(); } },
                 { "errors", n => { Errors = n.GetCollectionOfObjectValues<global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ValidationError>(global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ValidationError.CreateFromDiscriminatorValue)?.AsList(); } },
                 { "instance", n => { Instance = n.GetStringValue(); } },
+                { "missingProperties", n => { MissingProperties = n.GetCollectionOfPrimitiveValues<string>()?.AsList(); } },
                 { "status", n => { Status = n.GetIntValue(); } },
                 { "title", n => { Title = n.GetStringValue(); } },
                 { "traceId", n => { TraceId = n.GetStringValue(); } },
@@ -108,9 +126,11 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Users.Models
         public virtual void Serialize(ISerializationWriter writer)
         {
             if(ReferenceEquals(writer, null)) throw new ArgumentNullException(nameof(writer));
+            writer.WriteStringValue("code", Code);
             writer.WriteStringValue("detail", Detail);
             writer.WriteCollectionOfObjectValues<global::ECommerceStoreBFF.Infrastructure.Generated.Users.Models.ValidationError>("errors", Errors);
             writer.WriteStringValue("instance", Instance);
+            writer.WriteCollectionOfPrimitiveValues<string>("missingProperties", MissingProperties);
             writer.WriteIntValue("status", Status);
             writer.WriteStringValue("title", Title);
             writer.WriteStringValue("traceId", TraceId);

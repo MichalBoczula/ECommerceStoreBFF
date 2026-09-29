@@ -1,6 +1,6 @@
 {
-  "descriptionHash": "4BD015F360AC3B540DBB4392E7F04549369B5A761536BC5409D2E3984C0543CF763FE673E312CA181170CB062D5141815F54DE3BAC1BAE45CDD9536943B12A7F",
-  "descriptionLocation": "http://localhost:3000/api/users/swagger/v1/swagger.json",
+  "descriptionHash": "F05D04A7D67E7789705070417F4DDBE6F60B604050A784D7B45D43923CFFE0E6C40AB3A91DD890928BAA0BB2774568343F516C5DD3B5411443C27D09229E5111",
+  "descriptionLocation": "../../../../contracts/upstream/users.openapi.json",
   "lockFileVersion": "1.0.0",
   "kiotaVersion": "1.34.1",
   "clientClassName": "UsersApiClient",

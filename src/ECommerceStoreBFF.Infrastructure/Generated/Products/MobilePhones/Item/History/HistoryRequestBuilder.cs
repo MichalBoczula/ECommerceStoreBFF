@@ -34,12 +34,14 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item.
         {
         }
         /// <summary>
-        /// Returns the change history for a mobile phone.
+        /// Returns paged change history, newest first; ties in ChangedAt are ordered by history Id descending.
         /// </summary>
         /// <returns>A List&lt;global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneHistoryDto&gt;</returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
-        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails">When receiving a 500 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 400 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 404 status code</exception>
+        /// <exception cref="global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails">When receiving a 500 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
         public async Task<List<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneHistoryDto>?> GetAsync(Action<RequestConfiguration<global::ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
@@ -52,13 +54,15 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item.
             var requestInfo = ToGetRequestInformation(requestConfiguration);
             var errorMapping = new Dictionary<string, ParsableFactory<IParsable>>
             {
-                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ProblemDetails.CreateFromDiscriminatorValue },
+                { "400", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "404", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
+                { "500", global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.ApiProblemDetails.CreateFromDiscriminatorValue },
             };
             var collectionResult = await RequestAdapter.SendCollectionAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneHistoryDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneHistoryDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
             return collectionResult?.AsList();
         }
         /// <summary>
-        /// Returns the change history for a mobile phone.
+        /// Returns paged change history, newest first; ties in ChangedAt are ordered by history Id descending.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -86,7 +90,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item.
             return new global::ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.Item.History.HistoryRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
-        /// Returns the change history for a mobile phone.
+        /// Returns paged change history, newest first; ties in ChangedAt are ordered by history Id descending.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class HistoryRequestBuilderGetQueryParameters 
