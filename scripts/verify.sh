@@ -22,4 +22,6 @@ stage 'Format handwritten code'
 bash scripts/ci.sh format
 stage 'Container integration tests, TRX and coverage'
 bash scripts/ci.sh test
+stage 'BFF Docker image'
+docker build -f src/ECommerceStoreBFF.API/Dockerfile -t ecommerce-store-bff:verify .
 echo 'Local verification passed.'
