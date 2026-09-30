@@ -6,6 +6,7 @@ compose=(docker compose -f docker-compose.upstream.yml)
 export PRODUCTS_PORT="${PRODUCTS_PORT:-15000}"
 export USERS_PORT="${USERS_PORT:-16500}"
 export INVOICE_PORT="${INVOICE_PORT:-17000}"
+export PAYMENTS_PORT="${PAYMENTS_PORT:-18000}"
 
 cleanup() {
   result=$?
@@ -22,7 +23,7 @@ trap cleanup EXIT
 
 "${compose[@]}" up -d --wait --wait-timeout 240
 
-for entry in "products:$PRODUCTS_PORT" "users:$USERS_PORT" "invoice:$INVOICE_PORT"; do
+for entry in "products:$PRODUCTS_PORT" "users:$USERS_PORT" "invoice:$INVOICE_PORT" "payments:$PAYMENTS_PORT"; do
   service="${entry%%:*}"
   port="${entry#*:}"
   ready=0
@@ -38,8 +39,10 @@ for entry in "products:$PRODUCTS_PORT" "users:$USERS_PORT" "invoice:$INVOICE_POR
     exit 1
   fi
   curl --noproxy '*' --fail --silent --show-error "http://127.0.0.1:$port/health/live" >/dev/null
+  spec_path="/swagger/v1/swagger.json"
+  if [[ "$service" == payments ]]; then spec_path="/openapi.json"; fi
   curl --noproxy '*' --fail --silent --show-error \
-    "http://127.0.0.1:$port/swagger/v1/swagger.json" \
+    "http://127.0.0.1:$port$spec_path" \
     --output "${TMPDIR:-/tmp}/bff-$service-openapi.json"
 done
 
@@ -49,7 +52,7 @@ import os
 from pathlib import Path
 
 root = Path("contracts/upstream")
-for service, contract in (("products", "products"), ("users", "users"), ("invoice", "invoice")):
+for service, contract in (("products", "products"), ("users", "users"), ("invoice", "invoice"), ("payments", "payments")):
     actual = json.loads((Path(os.environ.get("TMPDIR", "/tmp")) / f"bff-{service}-openapi.json").read_text())
     expected = json.loads((root / f"{contract}.openapi.json").read_text())
     if actual != expected:

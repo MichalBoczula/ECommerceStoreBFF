@@ -77,3 +77,17 @@ services:
       ExternalServices__ProductCatalog__BaseUrl: http://products:8080
     ports:
       - "127.0.0.1:${INVOICE_PORT:-17000}:8080"
+
+  payments:
+    image: mb0101/ecommerce-store-payments-api@sha256:eb0c6a55687fced658cbc7ec68e11515283e4cb677acedae2c139d850ba81672
+    depends_on:
+      mongo-init:
+        condition: service_completed_successfully
+      invoice:
+        condition: service_started
+    environment:
+      PAYMENTS_MONGODB_CONNECTION_STRING: mongodb://mongodb:27017/?replicaSet=rs0
+      PAYMENTS_MONGODB_DATABASE_NAME: bff-payments-test
+      PAYMENTS_ORDERS_API_BASE_URL: http://invoice:8080
+    ports:
+      - "127.0.0.1:${PAYMENTS_PORT:-18000}:8080"

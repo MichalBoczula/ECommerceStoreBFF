@@ -22,3 +22,4 @@ generate() {
 generate products Products ProductsApiClient
 generate users Users UsersApiClient
 generate invoice Orders OrdersApiClient
+generate payments Payments PaymentsApiClient

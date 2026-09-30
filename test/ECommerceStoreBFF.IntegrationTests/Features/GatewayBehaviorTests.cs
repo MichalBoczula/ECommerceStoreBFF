@@ -19,12 +19,13 @@ public class GatewayBehaviorTests(ApplicationFactory factory)
     [InlineData("products", "/api/products/swagger/v1/swagger.json")]
     [InlineData("users", "/api/users/swagger/v1/swagger.json")]
     [InlineData("invoice", "/api/orders/swagger/v1/swagger.json")]
+    [InlineData("payments", "/api/payments/openapi.json")]
     public async Task OpenApiProxy_PreservesUpstreamDocument(string service, string gatewayPath)
     {
         using var bff = factory.CreateClient();
         using var upstream = UpstreamClient(service);
         using var proxied = await bff.GetAsync(gatewayPath);
-        using var original = await upstream.GetAsync("/swagger/v1/swagger.json");
+        using var original = await upstream.GetAsync(service == "payments" ? "/openapi.json" : "/swagger/v1/swagger.json");
 
         proxied.StatusCode.ShouldBe(HttpStatusCode.OK);
         proxied.StatusCode.ShouldBe(original.StatusCode);
@@ -38,6 +39,7 @@ public class GatewayBehaviorTests(ApplicationFactory factory)
     [InlineData("products", "/api/products/swagger/v1/swagger.json")]
     [InlineData("users", "/api/users/swagger/v1/swagger.json")]
     [InlineData("orders", "/api/orders/swagger/v1/swagger.json")]
+    [InlineData("payments", "/api/payments/openapi.json")]
     public async Task ScalarPageAndCorrespondingProxiedSpec_AreAvailable(string page, string specPath)
     {
         using var bff = factory.CreateClient();
@@ -125,6 +127,7 @@ public class GatewayBehaviorTests(ApplicationFactory factory)
     [InlineData("products", "/mobile-phones/")]
     [InlineData("users", "/customers/external/")]
     [InlineData("invoice", "/orders/")]
+    [InlineData("payments", "/payments/order/")]
     public async Task MissingResource_PreservesUpstreamStatusAndProblemDetails(string service, string prefix)
     {
         using var bff = factory.CreateClient();
@@ -169,6 +172,7 @@ public class GatewayBehaviorTests(ApplicationFactory factory)
     [InlineData("/mobile-phones")]
     [InlineData("/customers")]
     [InlineData("/orders/client/00000000-0000-0000-0000-000000000001")]
+    [InlineData("/payments/00000000-0000-0000-0000-000000000001/pay")]
     public async Task CorsPreflight_AllowsConfiguredAngularOrigin(string path)
     {
         using var bff = factory.CreateClient();
@@ -219,6 +223,7 @@ public class GatewayBehaviorTests(ApplicationFactory factory)
             "products" => factory.ProductsBaseAddress,
             "users" => factory.UsersBaseAddress,
             "invoice" => factory.InvoiceBaseAddress,
+            "payments" => factory.PaymentsBaseAddress,
             _ => throw new ArgumentOutOfRangeException(nameof(service))
         }
     };
