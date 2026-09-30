@@ -27,6 +27,8 @@ app.MapHealthChecks("/health");
 
 app.UseCors("AngularCorsPolicy");
 
+app.MapRegistrationEndpoints();
+
 app.MapScalarApiReference("scalar/products", options =>
 {
     options.WithTitle("ECommerce BFF - Products API")

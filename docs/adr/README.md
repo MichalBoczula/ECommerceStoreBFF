@@ -6,3 +6,4 @@ Records describe decisions implemented in this repository. Use sequential number
 | --- | --- | --- |
 | [0001](0001-yarp-boundary.md) | Accepted | YARP remains the public HTTP boundary; Kiota clients reflect the upstream contracts. |
 | [0002](0002-scanned-image-publication.md) | Accepted | Publish the scanned BFF image only after the `master` quality gate. |
+| [0003](0003-registration-orchestration.md) | Accepted | Coordinate customer creation and an Invoice cart through an explicit retryable route. |
