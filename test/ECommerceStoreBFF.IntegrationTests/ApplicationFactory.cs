@@ -25,6 +25,7 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private IContainer? _products;
     private IContainer? _users;
     private IContainer? _invoice;
+    private IContainer? _payments;
 
     public ApplicationFactory()
     {
@@ -51,13 +52,15 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
             var products = _products ?? throw new InvalidOperationException("Products API was not started.");
             var users = _users ?? throw new InvalidOperationException("Users API was not started.");
             var invoice = _invoice ?? throw new InvalidOperationException("Invoice API was not started.");
+            var payments = _payments ?? throw new InvalidOperationException("Payments API was not started.");
 
             config.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["GatewaySettings:BaseUrl"] = "http://localhost",
                 ["ReverseProxy:Clusters:products-cluster:Destinations:destination1:Address"] = BaseAddress(products).ToString(),
                 ["ReverseProxy:Clusters:users-cluster:Destinations:destination1:Address"] = BaseAddress(users).ToString(),
-                ["ReverseProxy:Clusters:orders-cluster:Destinations:destination1:Address"] = BaseAddress(invoice).ToString()
+                ["ReverseProxy:Clusters:orders-cluster:Destinations:destination1:Address"] = BaseAddress(invoice).ToString(),
+                ["ReverseProxy:Clusters:payments-cluster:Destinations:destination1:Address"] = BaseAddress(payments).ToString()
             });
         });
     }
@@ -65,6 +68,7 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
     public Uri ProductsBaseAddress => BaseAddress(_products ?? throw new InvalidOperationException("Products API was not started."));
     public Uri UsersBaseAddress => BaseAddress(_users ?? throw new InvalidOperationException("Users API was not started."));
     public Uri InvoiceBaseAddress => BaseAddress(_invoice ?? throw new InvalidOperationException("Invoice API was not started."));
+    public Uri PaymentsBaseAddress => BaseAddress(_payments ?? throw new InvalidOperationException("Payments API was not started."));
 
     public async Task InitializeAsync()
     {
@@ -94,6 +98,14 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
                 .Build();
 
             await _invoice.StartAsync();
+
+            _payments = BuildApiContainer("payments", "payments-api")
+                .WithEnvironment("PAYMENTS_MONGODB_CONNECTION_STRING", MongoConnectionString)
+                .WithEnvironment("PAYMENTS_MONGODB_DATABASE_NAME", "bff-payments-test")
+                .WithEnvironment("PAYMENTS_ORDERS_API_BASE_URL", "http://invoice-api:8080")
+                .Build();
+
+            await _payments.StartAsync();
         }
         catch
         {
@@ -155,6 +167,7 @@ public class ApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     private async Task DisposeContainersAsync()
     {
+        if (_payments is not null) await _payments.DisposeAsync();
         if (_invoice is not null) await _invoice.DisposeAsync();
         if (_users is not null) await _users.DisposeAsync();
         if (_products is not null) await _products.DisposeAsync();

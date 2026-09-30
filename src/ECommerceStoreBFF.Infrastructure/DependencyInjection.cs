@@ -1,5 +1,6 @@
 ﻿using ECommerceStoreBFF.Infrastructure.Generated.Orders;
 using ECommerceStoreBFF.Application.Registration;
+using ECommerceStoreBFF.Infrastructure.Generated.Payments;
 using ECommerceStoreBFF.Infrastructure.Generated.Products;
 using ECommerceStoreBFF.Infrastructure.Generated.Users;
 using ECommerceStoreBFF.Infrastructure.Registration;
@@ -49,6 +50,16 @@ public static class DependencyInjection
             var adapter = new HttpClientRequestAdapter(authProvider, httpClient: httpClient);
             adapter.BaseUrl = httpClient.BaseAddress!.ToString().TrimEnd('/');
             return new OrdersApiClient(adapter);
+        });
+
+        services.AddHttpClient<PaymentsApiClient>(client =>
+        {
+            client.BaseAddress = new Uri(bffBaseUrl);
+        }).AddTypedClient((httpClient, _) =>
+        {
+            var adapter = new HttpClientRequestAdapter(authProvider, httpClient: httpClient);
+            adapter.BaseUrl = httpClient.BaseAddress!.ToString().TrimEnd('/');
+            return new PaymentsApiClient(adapter);
         });
 
         services.AddScoped<RegistrationService>();

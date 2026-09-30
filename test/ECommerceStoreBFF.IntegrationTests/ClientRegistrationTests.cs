@@ -1,5 +1,6 @@
 using ECommerceStoreBFF.Infrastructure;
 using ECommerceStoreBFF.Infrastructure.Generated.Orders;
+using ECommerceStoreBFF.Infrastructure.Generated.Payments;
 using ECommerceStoreBFF.Infrastructure.Generated.Products;
 using ECommerceStoreBFF.Infrastructure.Generated.Users;
 using Microsoft.Extensions.Configuration;
@@ -24,15 +25,18 @@ public class ClientRegistrationTests
         var productsHandler = new RecordingHandler();
         var usersHandler = new RecordingHandler();
         var ordersHandler = new RecordingHandler();
+        var paymentsHandler = new RecordingHandler();
         var services = new ServiceCollection().AddInfrastructureServices(configuration);
         services.AddHttpClient(nameof(ProductsApiClient)).ConfigurePrimaryHttpMessageHandler(() => productsHandler);
         services.AddHttpClient(nameof(UsersApiClient)).ConfigurePrimaryHttpMessageHandler(() => usersHandler);
         services.AddHttpClient(nameof(OrdersApiClient)).ConfigurePrimaryHttpMessageHandler(() => ordersHandler);
+        services.AddHttpClient(nameof(PaymentsApiClient)).ConfigurePrimaryHttpMessageHandler(() => paymentsHandler);
         using var provider = services.BuildServiceProvider();
 
         await provider.GetRequiredService<ProductsApiClient>().MobilePhones.GetAsync();
         await provider.GetRequiredService<UsersApiClient>().UsersDocumentation.Flows.GetAsync();
         await provider.GetRequiredService<OrdersApiClient>().OrdersDocumentation.Flows.GetAsync();
+        await provider.GetRequiredService<PaymentsApiClient>().Health.Live.GetAsync();
 
         productsHandler.RequestUri!.GetLeftPart(UriPartial.Path)
             .ShouldBe("https://gateway.example.test:8443/mobile-phones");
@@ -40,6 +44,8 @@ public class ClientRegistrationTests
             .ShouldBe("https://gateway.example.test:8443/users-documentation/flows");
         ordersHandler.RequestUri!.GetLeftPart(UriPartial.Path)
             .ShouldBe("https://gateway.example.test:8443/orders-documentation/flows");
+        paymentsHandler.RequestUri!.GetLeftPart(UriPartial.Path)
+            .ShouldBe("https://gateway.example.test:8443/health/live");
     }
 
     private sealed class RecordingHandler : HttpMessageHandler

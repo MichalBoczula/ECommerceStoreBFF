@@ -50,6 +50,13 @@ app.MapScalarApiReference("scalar/orders", options =>
            .WithOpenApiRoutePattern("/api/orders/swagger/v1/swagger.json");
 });
 
+app.MapScalarApiReference("scalar/payments", options =>
+{
+    options.WithTitle("ECommerce BFF - Payments API")
+           .WithTheme(ScalarTheme.DeepSpace)
+           .WithOpenApiRoutePattern("/api/payments/openapi.json");
+});
+
 app.Use(async (context, next) =>
 {
     Console.WriteLine($"[BFF Request Received] Path: {context.Request.Path}{context.Request.QueryString}");

@@ -19,5 +19,12 @@
     "exportMethod": "published application layer",
     "specSha256": "4ad35148124b8944ff7e665e6dd54b6388ad003f056aa37bd1203f63e3e8c8c2",
     "paths": 11
+  },
+  "payments": {
+    "image": "mb0101/ecommerce-store-payments-api@sha256:eb0c6a55687fced658cbc7ec68e11515283e4cb677acedae2c139d850ba81672",
+    "sourceCommit": "3fc4ccded38a4025f600abd1ce92082befbd56e5",
+    "exportMethod": "successful main CI payments-openapi artifact",
+    "specSha256": "536a6517005ecea320db500ab089e6e0619d5ea47c2e0d5d7b28c7dcbc8b10d0",
+    "paths": 5
   }
 }
