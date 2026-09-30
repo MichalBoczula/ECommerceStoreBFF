@@ -2,15 +2,15 @@
 
 ## Purpose
 
-.NET 10 gateway for the ProductsCatalog, Users and Orders/Invoices APIs. YARP forwards requests and responses to the three services. The BFF also serves Scalar pages backed by their proxied OpenAPI documents and exposes its own `/health` endpoint. It does not own product, customer, order or invoice data.
+.NET 10 gateway for the ProductsCatalog, Users and Orders/Invoices APIs. YARP forwards their existing routes. The BFF also coordinates customer registration with an empty cart, serves Scalar pages backed by the proxied OpenAPI documents and exposes its own `/health` endpoint. It does not own product, customer, order or invoice data.
 
 ## Architecture
 
 | Component | Responsibility |
 | --- | --- |
-| `src/ECommerceStoreBFF.API` | YARP routes and destinations, CORS, Scalar and local health endpoint. |
-| `src/ECommerceStoreBFF.Infrastructure` | Three generated Kiota clients and their `GatewaySettings:BaseUrl` registration. |
-| `src/ECommerceStoreBFF.Application` | Application project; no business flow is currently implemented here. |
+| `src/ECommerceStoreBFF.API` | YARP routes and destinations, registration endpoints, CORS, Scalar and local health endpoint. |
+| `src/ECommerceStoreBFF.Infrastructure` | Three generated Kiota clients plus registration gateways to the configured Users and Invoice destinations. |
+| `src/ECommerceStoreBFF.Application` | Registration coordination and retry rules behind upstream ports. |
 | `test/ECommerceStoreBFF.IntegrationTests` | HTTP tests through the BFF with three real upstream APIs and their databases. |
 | `contracts/upstream` | Pinned image digests, OpenAPI documents and generation baseline. |
 
@@ -25,6 +25,10 @@ The public paths are the upstream paths, without a `/api/products`, `/api/users`
 | ProductsCatalog | `/products-documentation`, `/mobile-phones`, `/categories`, `/currencies` | `/api/products/swagger/v1/swagger.json` | `/scalar/products` |
 | Users | `/users-documentation`, `/users`, `/customers`, `/admins`, `/favorites` | `/api/users/swagger/v1/swagger.json` | `/scalar/users` |
 | Orders/Invoices | `/orders-documentation`, `/orders`, `/shopping-carts`, `/invoices`, `/client-data-versions` | `/api/orders/swagger/v1/swagger.json` | `/scalar/orders` |
+
+### Registration
+
+`POST /registrations/customers` accepts the Users customer creation body and returns the customer only after its Invoice cart is confirmed. Retrying the identical request with the same `externalId` reuses the profile and cart; a different profile for that ID returns 409. If Users succeeds and Invoice is unavailable, the BFF returns 502 and the caller can retry with the same request. `POST /registrations/customers/{externalId}/cart` repairs a preexisting customer whose cart is missing, without creating another profile. Existing `/customers` and `/shopping-carts` routes continue to proxy their upstream APIs. See [ADR-0003](docs/adr/0003-registration-orchestration.md).
 
 `/health` belongs to the BFF and checks its process, not the readiness of the upstream APIs. YARP destination addresses and route matches live in [`appsettings.json`](src/ECommerceStoreBFF.API/appsettings.json); the integration tests assert the current proxy behavior. The configured browser CORS origin is `http://localhost:4200` for the three service route groups. Adjust that policy in `Program.cs` for another frontend origin.
 
@@ -100,4 +104,4 @@ On a successful `master` run, CI pushes the same scanned image to Docker Hub as 
 
 ## Architecture decisions
 
-The [ADR index](docs/adr/README.md) records the YARP gateway boundary and image publication policy.
+The [ADR index](docs/adr/README.md) records the YARP boundary, image publication and registration orchestration decisions.

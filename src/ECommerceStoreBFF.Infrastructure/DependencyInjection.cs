@@ -1,6 +1,8 @@
 ﻿using ECommerceStoreBFF.Infrastructure.Generated.Orders;
+using ECommerceStoreBFF.Application.Registration;
 using ECommerceStoreBFF.Infrastructure.Generated.Products;
 using ECommerceStoreBFF.Infrastructure.Generated.Users;
+using ECommerceStoreBFF.Infrastructure.Registration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Kiota.Abstractions.Authentication;
@@ -49,6 +51,21 @@ public static class DependencyInjection
             return new OrdersApiClient(adapter);
         });
 
+        services.AddScoped<RegistrationService>();
+        services.AddHttpClient<ICustomerRegistrationGateway, CustomerRegistrationGateway>(client =>
+            client.BaseAddress = UpstreamAddress(configuration, "users-cluster"));
+        services.AddHttpClient<IShoppingCartRegistrationGateway, ShoppingCartRegistrationGateway>(client =>
+            client.BaseAddress = configuration["Registration:InvoiceBaseUrl"] is { } overrideAddress
+                ? new Uri(overrideAddress.TrimEnd('/') + "/", UriKind.Absolute)
+                : UpstreamAddress(configuration, "orders-cluster"));
+
         return services;
+    }
+
+    private static Uri UpstreamAddress(IConfiguration configuration, string cluster)
+    {
+        var address = configuration[$"ReverseProxy:Clusters:{cluster}:Destinations:destination1:Address"]
+            ?? throw new InvalidOperationException($"Missing upstream address for {cluster}.");
+        return new Uri(address.TrimEnd('/') + "/", UriKind.Absolute);
     }
 }
