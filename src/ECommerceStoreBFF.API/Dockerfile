@@ -1,4 +1,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+# Apply published Ubuntu OpenSSL security fixes before returning to the non-root runtime user.
+RUN apt-get update \
+    && apt-get install --only-upgrade --no-install-recommends -y libssl3t64 openssl \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 ENV ASPNETCORE_HTTP_PORTS=8080
 EXPOSE 8080

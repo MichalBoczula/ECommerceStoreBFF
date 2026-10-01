@@ -61,8 +61,9 @@ public class PaymentGatewayTests(ApplicationFactory factory)
         payment.StatusCode.ShouldBe(HttpStatusCode.NotFound);
         var savedOrder = await OrdersTestData.Client(bff).Orders[order.Id!.Value].GetAsync();
         savedOrder!.Status.ShouldBe("Created");
-        using var invoice = await bff.GetAsync($"/invoices/by-order/{clientId}/{order.Id}");
+        using var invoice = await bff.GetAsync($"/invoices/by-order/{order.Id}");
         invoice.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        invoice.Content.Headers.ContentType?.MediaType.ShouldBe("application/problem+json");
     }
 
     [Fact]
