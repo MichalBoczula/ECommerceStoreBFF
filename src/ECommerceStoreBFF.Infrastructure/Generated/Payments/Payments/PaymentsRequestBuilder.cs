@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 using ECommerceStoreBFF.Infrastructure.Generated.Payments.Payments.Item;
 using ECommerceStoreBFF.Infrastructure.Generated.Payments.Payments.Order;
+using ECommerceStoreBFF.Infrastructure.Generated.Payments.Payments.Webhooks;
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions;
 using System.Collections.Generic;
@@ -20,6 +21,11 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Payments.Payments
         public global::ECommerceStoreBFF.Infrastructure.Generated.Payments.Payments.Order.OrderRequestBuilder Order
         {
             get => new global::ECommerceStoreBFF.Infrastructure.Generated.Payments.Payments.Order.OrderRequestBuilder(PathParameters, RequestAdapter);
+        }
+        /// <summary>The webhooks property</summary>
+        public global::ECommerceStoreBFF.Infrastructure.Generated.Payments.Payments.Webhooks.WebhooksRequestBuilder Webhooks
+        {
+            get => new global::ECommerceStoreBFF.Infrastructure.Generated.Payments.Payments.Webhooks.WebhooksRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>Gets an item from the ECommerceStoreBFF.Infrastructure.Generated.Payments.payments.item collection</summary>
         /// <param name="position">Unique identifier of the item</param>
