@@ -195,6 +195,69 @@
         }
       }
     },
+    "/invoices/by-order/{orderId}": {
+      "get": {
+        "tags": [
+          "Invoices"
+        ],
+        "summary": "Get completed invoice by order Id.",
+        "description": "Returns the completed invoice for an order; pending, failed and missing invoices return 404.",
+        "operationId": "GetInvoiceByOrderId",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/invoices/{invoiceId}": {
       "get": {
         "tags": [
@@ -837,7 +900,7 @@
             "type": "string"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "ClientDataVersionResponseDto": {
         "required": [
@@ -926,7 +989,7 @@
             "type": "string"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "CreateClientDataVersionRequestDto": {
         "required": [
@@ -1083,7 +1146,7 @@
             "type": "string"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "OrderLineResponseDto": {
         "required": [
@@ -1185,7 +1248,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "ProductVersionResponseDto": {
         "required": [

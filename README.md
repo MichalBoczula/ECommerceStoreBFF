@@ -27,7 +27,7 @@ The public paths are the upstream paths, without an `/api/{service}` prefix. The
 | Orders/Invoices | `/orders-documentation`, `/orders`, `/shopping-carts`, `/invoices`, `/client-data-versions` | `/api/orders/swagger/v1/swagger.json` | `/scalar/orders` |
 | Payments | `/payments` | `/api/payments/openapi.json` | `/scalar/payments` |
 
-Payments currently creates or reads a `created` Payment and checks the order snapshot. It does not contact a payment provider, set an order to `Paid`, cancel a Payment via HTTP, or issue an invoice. The BFF forwards this contract without treating a payment record as proof of settlement. See [ADR-0004](docs/adr/0004-payments-boundary.md).
+Payments now supports sandbox Stripe-hosted Checkout and signed webhooks. The BFF forwards bodyless Checkout creation, authoritative payment/order reads and completed invoice lookup. A return URL does not prove settlement. See [ADR-0005](docs/adr/0005-stripe-hosted-checkout.md) for webhook routing, fulfillment and demo identity limitations.
 
 ### Registration
 

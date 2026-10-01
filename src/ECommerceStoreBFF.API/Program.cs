@@ -59,7 +59,7 @@ app.MapScalarApiReference("scalar/payments", options =>
 
 app.Use(async (context, next) =>
 {
-    Console.WriteLine($"[BFF Request Received] Path: {context.Request.Path}{context.Request.QueryString}");
+    Console.WriteLine($"[BFF Request Received] Path: {context.Request.Path}");
 
     await next();
 

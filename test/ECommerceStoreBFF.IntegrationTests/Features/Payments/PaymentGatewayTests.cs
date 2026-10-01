@@ -45,6 +45,28 @@ public class PaymentGatewayTests(ApplicationFactory factory)
     }
 
     [Fact]
+    public async Task CheckoutDisabled_PreservesError_WithoutCreatingPayment()
+    {
+        using var bff = factory.CreateClient();
+        var phone = await ProductTestData.CreatePhoneAsync(ProductTestData.Client(bff));
+        var clientId = Guid.NewGuid();
+        var order = await OrdersTestData.CreateOrderAsync(
+            OrdersTestData.Client(bff), clientId, phone.Id!.Value);
+
+        using var checkout = await bff.PostAsync($"/payments/{order.Id}/checkout", null);
+        checkout.StatusCode.ShouldBe(HttpStatusCode.ServiceUnavailable);
+        using var body = JsonDocument.Parse(await checkout.Content.ReadAsStringAsync());
+        body.RootElement.GetProperty("code").GetString().ShouldBe("checkout_disabled");
+        using var payment = await bff.GetAsync($"/payments/order/{order.Id}");
+        payment.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        var savedOrder = await OrdersTestData.Client(bff).Orders[order.Id!.Value].GetAsync();
+        savedOrder!.Status.ShouldBe("Created");
+        using var invoice = await bff.GetAsync($"/invoices/by-order/{order.Id}");
+        invoice.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        invoice.Content.Headers.ContentType?.MediaType.ShouldBe("application/problem+json");
+    }
+
+    [Fact]
     public async Task UnknownOrder_PreservesPaymentsNotFoundError()
     {
         using var bff = factory.CreateClient();

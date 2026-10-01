@@ -8,3 +8,5 @@ Records describe decisions implemented in this repository. Use sequential number
 | [0002](0002-scanned-image-publication.md) | Accepted | Publish the scanned BFF image only after the `master` quality gate. |
 | [0003](0003-registration-orchestration.md) | Accepted | Coordinate customer creation and an Invoice cart through an explicit retryable route. |
 | [0004](0004-payments-boundary.md) | Accepted | Proxy payment creation and reads without inferring settlement from a created payment. |
+
+- [ADR-0005: Stripe-hosted Checkout](0005-stripe-hosted-checkout.md)

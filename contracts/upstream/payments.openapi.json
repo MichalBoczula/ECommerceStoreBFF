@@ -1,6 +1,46 @@
 {
   "components": {
     "schemas": {
+      "CheckoutResponse": {
+        "properties": {
+          "checkout_status": {
+            "enum": [
+              "open",
+              "complete",
+              "expired"
+            ],
+            "title": "Checkout Status",
+            "type": "string"
+          },
+          "checkout_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checkout Url"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentResponse"
+          }
+        },
+        "required": [
+          "payment",
+          "checkout_url",
+          "checkout_status",
+          "expires_at"
+        ],
+        "title": "CheckoutResponse",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -156,6 +196,17 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "WebhookAcknowledgement": {
+        "properties": {
+          "received": {
+            "default": true,
+            "title": "Received",
+            "type": "boolean"
+          }
+        },
+        "title": "WebhookAcknowledgement",
         "type": "object"
       }
     }
@@ -1206,6 +1257,1374 @@
           }
         },
         "summary": "Get Payment By Order Id",
+        "tags": [
+          "Payments"
+        ]
+      }
+    },
+    "/payments/webhooks/stripe": {
+      "post": {
+        "description": "Receive the original signed bytes without contacting Orders, invoices or Stripe.",
+        "operationId": "receiveStripeWebhook",
+        "parameters": [
+          {
+            "description": "Stripe timestamp and v1 signature.",
+            "in": "header",
+            "name": "Stripe-Signature",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            }
+          },
+          "description": "Original Stripe snapshot event bytes; signature verified before parsing.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookAcknowledgement"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Bad Request; see the stable code in the problem body."
+          },
+          "405": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Method Not Allowed; see the stable code in the problem body."
+          },
+          "413": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Content Too Large; see the stable code in the problem body."
+          },
+          "415": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unsupported Media Type; see the stable code in the problem body."
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Internal Server Error; see the stable code in the problem body."
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Service Unavailable; see the stable code in the problem body."
+          }
+        },
+        "summary": "Receive Stripe Webhook",
+        "tags": [
+          "Webhooks"
+        ]
+      }
+    },
+    "/payments/{order_id}/checkout": {
+      "post": {
+        "operationId": "createOrderCheckout",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Bad Request; see the stable code in the problem body."
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Not Found; see the stable code in the problem body."
+          },
+          "405": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Method Not Allowed; see the stable code in the problem body."
+          },
+          "409": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Conflict; see the stable code in the problem body."
+          },
+          "415": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Unsupported Media Type; see the stable code in the problem body."
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Internal Server Error; see the stable code in the problem body."
+          },
+          "502": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Bad Gateway; see the stable code in the problem body."
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Service Unavailable; see the stable code in the problem body."
+          },
+          "504": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "title": "Code",
+                      "type": "string"
+                    },
+                    "detail": {
+                      "title": "Detail",
+                      "type": "string"
+                    },
+                    "errors": {
+                      "items": {
+                        "properties": {
+                          "entity": {
+                            "title": "Entity",
+                            "type": "string"
+                          },
+                          "message": {
+                            "title": "Message",
+                            "type": "string"
+                          },
+                          "name": {
+                            "title": "Name",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "message",
+                          "name",
+                          "entity"
+                        ],
+                        "title": "ValidationEntry",
+                        "type": "object"
+                      },
+                      "title": "Errors",
+                      "type": "array"
+                    },
+                    "instance": {
+                      "title": "Instance",
+                      "type": "string"
+                    },
+                    "missingProperties": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "title": "Missingproperties",
+                      "type": "array"
+                    },
+                    "status": {
+                      "title": "Status",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "title": "Title",
+                      "type": "string"
+                    },
+                    "traceId": {
+                      "title": "Traceid",
+                      "type": "string"
+                    },
+                    "type": {
+                      "default": "about:blank",
+                      "title": "Type",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "status",
+                    "detail",
+                    "instance",
+                    "code",
+                    "traceId",
+                    "errors",
+                    "missingProperties"
+                  ],
+                  "title": "ProblemDetails",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Gateway Timeout; see the stable code in the problem body."
+          }
+        },
+        "summary": "Create Order Checkout",
         "tags": [
           "Payments"
         ]
