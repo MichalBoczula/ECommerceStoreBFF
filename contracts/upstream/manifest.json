@@ -1,9 +1,9 @@
 {
   "products": {
-    "image": "mb0101/product-catalog-api@sha256:1814ef51bb86a2e34a4eff198c6fc1be31c9921b55fb4f5be12a02277b5e374d",
-    "sourceCommit": null,
-    "exportMethod": "published application layer",
-    "specSha256": "fa0c8a3db1ab9faeee8995d7a0cacd67f120b0e4c9679aa46bf58b19aa0a5302",
+    "image": "mb0101/product-catalog-api@sha256:dd92571adbbe889faacca4c0a72b4296a64e234c0ca9d57c9cf85b08bbd054d8",
+    "sourceCommit": "e81f779393780c95b878463beb710481e4d744c4",
+    "exportMethod": "generated-contract/openapi.json artifact from successful master CI run 38964842210",
+    "specSha256": "402742e5bb6a284103591f79565e341bf79a8f12074482c5b6f06bdf215b587d",
     "paths": 8
   },
   "users": {

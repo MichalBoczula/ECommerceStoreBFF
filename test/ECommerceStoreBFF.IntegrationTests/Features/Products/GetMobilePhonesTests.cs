@@ -16,7 +16,20 @@ public class GetMobilePhonesTests(ApplicationFactory factory)
         var response = await client.MobilePhones.GetAsync(options => options.QueryParameters.Amount = 1000);
 
         response.ShouldNotBeNull();
-        response.ShouldContain(phone => phone.Id == created.Id);
+        response.Single(phone => phone.Id == created.Id).MainPhoto.ShouldBe(created.CommonDescription!.MainPhoto);
+    }
+
+    [Fact]
+    public async Task GetMobilePhonesByIds_PreservesMainPhoto()
+    {
+        using var httpClient = factory.CreateClient();
+        var client = ProductTestData.Client(httpClient);
+        var created = await ProductTestData.CreatePhoneAsync(client);
+
+        var response = await client.MobilePhones.ByIds.PostAsync([created.Id!.Value]);
+
+        response.ShouldNotBeNull();
+        response.Single(phone => phone.Id == created.Id).MainPhoto.ShouldBe(created.CommonDescription!.MainPhoto);
     }
 
     [Fact]
