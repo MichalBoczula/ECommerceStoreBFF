@@ -38,6 +38,14 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
 #endif
         /// <summary>The id property</summary>
         public Guid? Id { get; set; }
+        /// <summary>The mainPhoto property</summary>
+#if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+#nullable enable
+        public string? MainPhoto { get; set; }
+#nullable restore
+#else
+        public string MainPhoto { get; set; }
+#endif
         /// <summary>The name property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -78,6 +86,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
                 { "camera", n => { Camera = n.GetStringValue(); } },
                 { "displayType", n => { DisplayType = n.GetStringValue(); } },
                 { "id", n => { Id = n.GetGuidValue(); } },
+                { "mainPhoto", n => { MainPhoto = n.GetStringValue(); } },
                 { "name", n => { Name = n.GetStringValue(); } },
                 { "price", n => { Price = n.GetObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MoneyDto>(global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MoneyDto.CreateFromDiscriminatorValue); } },
                 { "screenSizeInches", n => { ScreenSizeInches = n.GetDoubleValue(); } },
@@ -94,6 +103,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.Models
             writer.WriteStringValue("camera", Camera);
             writer.WriteStringValue("displayType", DisplayType);
             writer.WriteGuidValue("id", Id);
+            writer.WriteStringValue("mainPhoto", MainPhoto);
             writer.WriteStringValue("name", Name);
             writer.WriteObjectValue<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MoneyDto>("price", Price);
             writer.WriteDoubleValue("screenSizeInches", ScreenSizeInches);

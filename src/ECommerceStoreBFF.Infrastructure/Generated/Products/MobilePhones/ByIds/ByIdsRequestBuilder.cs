@@ -34,7 +34,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.ByIds
         {
         }
         /// <summary>
-        /// Returns active mobile phones matching the provided Ids, ordered by Id.
+        /// Returns active mobile phones matching the provided Ids, including each mainPhoto, ordered by Id.
         /// </summary>
         /// <returns>A List&lt;global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDto&gt;</returns>
         /// <param name="body">The request body</param>
@@ -64,7 +64,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.ByIds
             return collectionResult?.AsList();
         }
         /// <summary>
-        /// Returns active mobile phones matching the provided Ids, ordered by Id.
+        /// Returns active mobile phones matching the provided Ids, including each mainPhoto, ordered by Id.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="body">The request body</param>

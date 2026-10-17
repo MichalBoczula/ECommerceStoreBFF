@@ -20,7 +20,7 @@ public class FilterMobilePhonesTests(ApplicationFactory factory)
         });
 
         response.ShouldNotBeNull();
-        response.ShouldContain(phone => phone.Id == created.Id);
+        response.Single(phone => phone.Id == created.Id).MainPhoto.ShouldBe(created.CommonDescription!.MainPhoto);
         response.ShouldAllBe(phone => phone.Brand == "Apple");
     }
 
@@ -39,7 +39,7 @@ public class FilterMobilePhonesTests(ApplicationFactory factory)
         });
 
         response.ShouldNotBeNull();
-        response.ShouldContain(phone => phone.Id == created.Id);
+        response.Single(phone => phone.Id == created.Id).MainPhoto.ShouldBe(created.CommonDescription!.MainPhoto);
         response.ShouldAllBe(phone => phone.Price != null && phone.Price.Amount >= price - 1 && phone.Price.Amount <= price + 1);
     }
 }

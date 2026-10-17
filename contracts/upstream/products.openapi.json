@@ -81,7 +81,7 @@
           "MobilePhones"
         ],
         "summary": "Get mobile phones by Ids",
-        "description": "Returns active mobile phones matching the provided Ids, ordered by Id.",
+        "description": "Returns active mobile phones matching the provided Ids, including each mainPhoto, ordered by Id.",
         "operationId": "GetMobilePhonesByIds",
         "requestBody": {
           "content": {
@@ -355,7 +355,7 @@
           "MobilePhones"
         ],
         "summary": "Get mobile phones",
-        "description": "Returns up to the requested amount of active mobile phones ordered by name, then Id.",
+        "description": "Returns up to the requested amount of active mobile phones, including each mainPhoto for list images, ordered by name, then Id.",
         "operationId": "GetMobilePhones",
         "parameters": [
           {
@@ -580,7 +580,7 @@
           "MobilePhones"
         ],
         "summary": "Get filtered mobile phones",
-        "description": "Returns active mobile phones matching the filter, ordered by name, then Id.",
+        "description": "Returns active mobile phones matching the filter, including each mainPhoto, ordered by name, then Id.",
         "operationId": "GetFiltered MobilePhones",
         "requestBody": {
           "content": {
@@ -675,7 +675,7 @@
             "type": "string"
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "CommonDescriptionDto": {
         "type": "object",
@@ -1086,6 +1086,7 @@
         "required": [
           "camera",
           "displayType",
+          "mainPhoto",
           "price",
           "screenSizeInches"
         ],
@@ -1099,6 +1100,9 @@
             "type": "string"
           },
           "brand": {
+            "type": "string"
+          },
+          "mainPhoto": {
             "type": "string"
           },
           "displayType": {

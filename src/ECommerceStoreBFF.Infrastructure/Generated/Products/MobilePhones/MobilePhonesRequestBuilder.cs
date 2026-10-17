@@ -78,7 +78,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones
         {
         }
         /// <summary>
-        /// Returns up to the requested amount of active mobile phones ordered by name, then Id.
+        /// Returns up to the requested amount of active mobile phones, including each mainPhoto for list images, ordered by name, then Id.
         /// </summary>
         /// <returns>A List&lt;global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDto&gt;</returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
@@ -131,7 +131,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones
             return await RequestAdapter.SendAsync<global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto>(requestInfo, global::ECommerceStoreBFF.Infrastructure.Generated.Products.Models.MobilePhoneDetailsDto.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
-        /// Returns up to the requested amount of active mobile phones ordered by name, then Id.
+        /// Returns up to the requested amount of active mobile phones, including each mainPhoto for list images, ordered by name, then Id.
         /// </summary>
         /// <returns>A <see cref="RequestInformation"/></returns>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -181,7 +181,7 @@ namespace ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones
             return new global::ECommerceStoreBFF.Infrastructure.Generated.Products.MobilePhones.MobilePhonesRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
-        /// Returns up to the requested amount of active mobile phones ordered by name, then Id.
+        /// Returns up to the requested amount of active mobile phones, including each mainPhoto for list images, ordered by name, then Id.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
         public partial class MobilePhonesRequestBuilderGetQueryParameters 

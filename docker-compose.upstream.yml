@@ -42,7 +42,7 @@ services:
         exit 1
 
   products:
-    image: mb0101/product-catalog-api@sha256:1814ef51bb86a2e34a4eff198c6fc1be31c9921b55fb4f5be12a02277b5e374d
+    image: mb0101/product-catalog-api@sha256:dd92571adbbe889faacca4c0a72b4296a64e234c0ca9d57c9cf85b08bbd054d8
     depends_on:
       sql:
         condition: service_healthy
