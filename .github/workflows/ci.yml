@@ -68,11 +68,18 @@ jobs:
       - name: Test BFF with SQL Server, MongoDB and three upstream APIs
         env:
           BFF_PACT_DIR: ${{ github.workspace }}/artifacts/verification/pact-consumer-users
+          BFF_INVOICE_PACT_DIR: ${{ github.workspace }}/artifacts/verification/pact-consumer-invoice
         run: VERIFY_SUMMARY_FILE="$GITHUB_STEP_SUMMARY" bash scripts/ci.sh test
       - uses: actions/upload-artifact@v4
         with:
           name: bff-users-pact
           path: artifacts/verification/pact-consumer-users/
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bff-invoice-pact
+          path: artifacts/verification/pact-consumer-invoice/
           if-no-files-found: error
           retention-days: 14
       - uses: actions/upload-artifact@v4
@@ -168,7 +175,7 @@ jobs:
             exit 1
           fi
 
-  publish-bff-users-pact:
+  publish-bff-consumer-pacts:
     if: >-
       always() && !cancelled() && needs.quality-gate.result == 'success' &&
       (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
@@ -193,6 +200,20 @@ jobs:
         with:
           name: bff-users-publication
           path: bff-users-publication.json
+          if-no-files-found: error
+      - uses: actions/download-artifact@v4
+        with:
+          name: bff-invoice-pact
+          path: invoice-pact-input
+      - name: Publish the BFF Invoice consumer Pact
+        env:
+          PACT_REGISTRY_URL: ${{ vars.PACT_REGISTRY_URL }}
+          PACT_PUBLISHER_TOKEN: ${{ secrets.PACT_PUBLISHER_TOKEN }}
+        run: python3 scripts/pact/publish_consumer.py invoice-pact-input bff-invoice-publication.json --provider invoice
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bff-invoice-publication
+          path: bff-invoice-publication.json
           if-no-files-found: error
 
   docker-image:

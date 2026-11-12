@@ -1,9 +1,9 @@
 using System.Globalization;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text.Json;
 using ECommerceStoreBFF.Application.Registration;
 using ECommerceStoreBFF.Infrastructure.Registration;
+using ECommerceStoreBFF.IntegrationTests.Common;
 using PactNet;
 using PactNet.Matchers;
 using Shouldly;
@@ -12,7 +12,6 @@ namespace ECommerceStoreBFF.IntegrationTests.Features.Users;
 
 public sealed class UsersConsumerPactTests
 {
-    private const string PactFile = "bff-users.json";
     private const string CustomersPath = "/customers";
     private const string Json = "application/json";
     private const string ProblemJson = "application/problem+json";
@@ -32,47 +31,10 @@ public sealed class UsersConsumerPactTests
     private static readonly JsonSerializerOptions WireJson = new(JsonSerializerDefaults.Web);
 
     [Fact]
-    public async Task CustomerRegistrationGatewayEmitsReproduciblePact()
-    {
-        Environment.SetEnvironmentVariable("PACT_DO_NOT_TRACK", "true");
-        var directory = Directory.CreateTempSubdirectory("bff-users-pact-");
-        try
-        {
-            var first = await VerifyAsync(directory.CreateSubdirectory("first").FullName);
-            var second = await VerifyAsync(directory.CreateSubdirectory("second").FullName);
-            first.AsSpan().SequenceEqual(second).ShouldBeTrue("fresh Pact servers must produce the same bytes");
+    public Task CustomerRegistrationGatewayEmitsReproduciblePact() =>
+        ConsumerPactArtifact.VerifyAndWriteAsync("users", InteractionCount, "BFF_PACT_DIR", VerifyAsync);
 
-            using var document = JsonDocument.Parse(first);
-            var pact = document.RootElement;
-            pact.GetProperty("consumer").GetProperty("name").GetString().ShouldBe("bff");
-            pact.GetProperty("provider").GetProperty("name").GetString().ShouldBe("users");
-            pact.GetProperty("interactions").GetArrayLength().ShouldBe(InteractionCount);
-            pact.GetProperty("metadata").GetProperty("pactSpecification").GetProperty("version").GetString().ShouldBe("4.0");
-
-            var output = Environment.GetEnvironmentVariable("BFF_PACT_DIR");
-            if (!string.IsNullOrWhiteSpace(output))
-            {
-                Directory.CreateDirectory(output);
-                await File.WriteAllBytesAsync(Path.Combine(output, PactFile), first);
-                await File.WriteAllTextAsync(Path.Combine(output, "manifest.json"), JsonSerializer.Serialize(new
-                {
-                    schemaVersion = 1,
-                    consumer = "bff",
-                    provider = "users",
-                    pactSpecification = "4.0",
-                    file = PactFile,
-                    sha256 = Convert.ToHexStringLower(SHA256.HashData(first)),
-                    interactionCount = InteractionCount
-                }, new JsonSerializerOptions { WriteIndented = true }) + "\n");
-            }
-        }
-        finally
-        {
-            directory.Delete(recursive: true);
-        }
-    }
-
-    private static async Task<byte[]> VerifyAsync(string directory)
+    private static async Task VerifyAsync(string directory)
     {
         var pact = Pact.V4("bff", "users", new PactConfig { PactDir = directory }).WithHttpInteractions();
         const string existingState = "the BFF registration customer exists";
@@ -117,7 +79,6 @@ public sealed class UsersConsumerPactTests
             AssertCustomer(await gateway.CreateAsync(NewCustomer, CancellationToken.None), NewCustomer).Companies.ShouldBeEmpty();
             AssertProblem(await gateway.CreateAsync(Existing, CancellationToken.None), HttpStatusCode.Conflict);
         });
-        return await File.ReadAllBytesAsync(Path.Combine(directory, PactFile));
     }
 
     private static string RequestJson(RegisterCustomerRequest request) =>
