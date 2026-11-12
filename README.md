@@ -108,6 +108,7 @@ On pull requests and pushes to `master`, [GitHub Actions CI](.github/workflows/c
 On a successful `master` push, CI pushes the same scanned image to Docker Hub as `mb0101/ecommerce-store-bff-api:<full commit SHA>` and `mb0101/ecommerce-store-bff-api:latest`, then compares the published digests. It uses GitHub Actions secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`; pull requests never publish. Publishing an image does not deploy it to a runtime. See [ADR-0002](docs/adr/0002-scanned-image-publication.md).
 
 Use [Run workflow](docs/web-pact-provider.md#registry-publication) on `master` to run CI and retry Pact verification publication.
+The [BFF → Users Pact](docs/users-pact-consumer.md) covers the customer lookup and creation calls used during registration.
 
 ## Architecture decisions
 

@@ -14,6 +14,7 @@
     <!-- Pin the patched 9.x transitive dependency; keep NU1903/NU1904 enforced. -->
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.21" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="PactNet" Version="5.0.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
     <PackageReference Include="Testcontainers" Version="4.10.0" />

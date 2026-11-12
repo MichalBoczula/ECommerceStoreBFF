@@ -66,7 +66,15 @@ jobs:
         with:
           global-json-file: global.json
       - name: Test BFF with SQL Server, MongoDB and three upstream APIs
+        env:
+          BFF_PACT_DIR: ${{ github.workspace }}/artifacts/verification/pact-consumer-users
         run: VERIFY_SUMMARY_FILE="$GITHUB_STEP_SUMMARY" bash scripts/ci.sh test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bff-users-pact
+          path: artifacts/verification/pact-consumer-users/
+          if-no-files-found: error
+          retention-days: 14
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -159,6 +167,32 @@ jobs:
             echo "Dependency Review must be $expected; actual result: $DEPENDENCY_REVIEW" >&2
             exit 1
           fi
+
+  publish-bff-users-pact:
+    if: >-
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      github.ref == 'refs/heads/master' && vars.PACT_REGISTRY_URL != ''
+    needs: quality-gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: bff-users-pact
+          path: pact-input
+      - name: Publish the BFF Users consumer Pact
+        env:
+          PACT_REGISTRY_URL: ${{ vars.PACT_REGISTRY_URL }}
+          PACT_PUBLISHER_TOKEN: ${{ secrets.PACT_PUBLISHER_TOKEN }}
+        run: python3 scripts/pact/publish_consumer.py pact-input bff-users-publication.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bff-users-publication
+          path: bff-users-publication.json
+          if-no-files-found: error
 
   docker-image:
     if: ${{ always() && !cancelled() && needs.quality-gate.result == 'success' }}
