@@ -105,7 +105,9 @@ dotnet test test/ECommerceStoreBFF.IntegrationTests/ECommerceStoreBFF.Integratio
 
 On pull requests and pushes to `master`, [GitHub Actions CI](.github/workflows/ci.yml) runs source/build/format checks, Web Pact verification, container integration tests, secret scanning and a quality gate. Pull requests also run Dependency Review; on `master` that job is intentionally skipped. Only after the quality gate succeeds does CI build the image, smoke-test `/health`, and scan for fixable HIGH/CRITICAL vulnerabilities with Trivy. The [upstream baseline workflow](.github/workflows/upstream-contracts.yml) checks image readiness and OpenAPI compatibility when upstream contracts or their Compose verification change; it can also be started manually.
 
-On a successful `master` run, CI pushes the same scanned image to Docker Hub as `mb0101/ecommerce-store-bff-api:<full commit SHA>` and `mb0101/ecommerce-store-bff-api:latest`, then compares the published digests. It uses GitHub Actions secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`; pull requests never publish. Publishing an image does not deploy it to a runtime. See [ADR-0002](docs/adr/0002-scanned-image-publication.md).
+On a successful `master` push, CI pushes the same scanned image to Docker Hub as `mb0101/ecommerce-store-bff-api:<full commit SHA>` and `mb0101/ecommerce-store-bff-api:latest`, then compares the published digests. It uses GitHub Actions secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`; pull requests never publish. Publishing an image does not deploy it to a runtime. See [ADR-0002](docs/adr/0002-scanned-image-publication.md).
+
+Use [Run workflow](docs/web-pact-provider.md#registry-publication) on `master` to run CI and retry Pact verification publication.
 
 ## Architecture decisions
 
