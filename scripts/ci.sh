@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-command="${1:?Usage: scripts/ci.sh source|build|format|test}"
+command="${1:?Usage: scripts/ci.sh source|build|format|test|pact}"
 results_dir="${VERIFY_RESULTS_DIR:-$PWD/artifacts/verification}"
 summary_file="${VERIFY_SUMMARY_FILE:-$results_dir/summary.md}"
 
@@ -11,6 +11,7 @@ case "$command" in
     git diff --check
     for script in scripts/*.sh; do bash -n "$script"; done
     python3 -m py_compile scripts/summarize-trx.py scripts/report-coverage.py
+    python3 -m py_compile scripts/pact/*.py
     ;;
   build)
     dotnet restore ECommerceStoreBFF.slnx
@@ -18,6 +19,14 @@ case "$command" in
     ;;
   format)
     bash scripts/verify-format.sh
+    ;;
+  pact)
+    pact_results="$results_dir/pact-provider"
+    rm -f "$pact_results"/{bff.log,pact-results.json,verification.json}
+    PACT_DO_NOT_TRACK=true uv run --no-project --python 3.14.7 --with-requirements scripts/pact/requirements.txt \
+      python scripts/pact/verify.py \
+      --provider-dll src/ECommerceStoreBFF.API/bin/Release/net10.0/ECommerceStoreBFF.API.dll \
+      --results "$pact_results"
     ;;
   test)
     mkdir -p "$results_dir"

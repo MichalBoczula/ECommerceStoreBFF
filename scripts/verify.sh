@@ -20,6 +20,8 @@ stage 'Restore and build with NuGet Audit'
 bash scripts/ci.sh build
 stage 'Format handwritten code'
 bash scripts/ci.sh format
+stage 'Web Pact provider verification'
+bash scripts/ci.sh pact
 stage 'Container integration tests, TRX and coverage'
 bash scripts/ci.sh test
 stage 'BFF Docker image'
