@@ -1,0 +1,190 @@
+{
+  "consumer": {
+    "name": "web"
+  },
+  "interactions": [
+    {
+      "description": "register a new customer and confirm the cart",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "the requested customer does not exist",
+          "params": {
+            "customerId": "46000000-0000-4000-8000-000000000001",
+            "registration": {
+              "externalId": "web-pact-registration",
+              "individual": {
+                "billingAddress": {
+                  "apartmentNumber": "2",
+                  "buildingNumber": "10",
+                  "city": "Warsaw",
+                  "postalCode": "00-001",
+                  "street": "Main Street"
+                },
+                "email": "register@example.test",
+                "firstName": "Acceptance",
+                "lastName": "Customer",
+                "phone": "123456789",
+                "shippingAddress": {
+                  "apartmentNumber": "2",
+                  "buildingNumber": "10",
+                  "city": "Warsaw",
+                  "postalCode": "00-001",
+                  "street": "Main Street"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "externalId": "web-pact-registration",
+            "individual": {
+              "billingAddress": {
+                "apartmentNumber": "2",
+                "buildingNumber": "10",
+                "city": "Warsaw",
+                "postalCode": "00-001",
+                "street": "Main Street"
+              },
+              "email": "register@example.test",
+              "firstName": "Acceptance",
+              "lastName": "Customer",
+              "phone": "123456789",
+              "shippingAddress": {
+                "apartmentNumber": "2",
+                "buildingNumber": "10",
+                "city": "Warsaw",
+                "postalCode": "00-001",
+                "street": "Main Street"
+              }
+            }
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/registrations/customers"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "id": "46000000-0000-4000-8000-000000000001"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "repair the cart for an existing customer",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "the requested customer exists without a cart",
+          "params": {
+            "customerId": "46000000-0000-4000-8000-000000000002",
+            "registration": {
+              "externalId": "web-pact-legacy",
+              "individual": {
+                "billingAddress": {
+                  "apartmentNumber": "2",
+                  "buildingNumber": "10",
+                  "city": "Warsaw",
+                  "postalCode": "00-001",
+                  "street": "Main Street"
+                },
+                "email": "legacy@example.test",
+                "firstName": "Acceptance",
+                "lastName": "Customer",
+                "phone": "123456789",
+                "shippingAddress": {
+                  "apartmentNumber": "2",
+                  "buildingNumber": "10",
+                  "city": "Warsaw",
+                  "postalCode": "00-001",
+                  "street": "Main Street"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "path": "/registrations/customers/web-pact-legacy/cart"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "id": "46000000-0000-4000-8000-000000000002"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "17.1.4"
+    },
+    "pactRust": {
+      "ffi": "0.5.8",
+      "models": "1.3.16"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "bff"
+  }
+}

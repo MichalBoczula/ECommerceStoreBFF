@@ -3,6 +3,9 @@
 ###############################################################################
 * text=auto
 
+# Preserve the exact consumer Pact bytes published by Web CI.
+contracts/pact/web-bff.json -text
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #

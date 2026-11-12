@@ -74,21 +74,73 @@ jobs:
           path: artifacts/verification/test/handwritten-coverage.cobertura.xml
           if-no-files-found: warn
 
+  pact-provider:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: "0.12.18"
+      - name: Build the BFF candidate
+        run: dotnet build src/ECommerceStoreBFF.API/ECommerceStoreBFF.API.csproj --configuration Release
+      - name: Verify the pinned Web registration Pact
+        run: bash scripts/ci.sh pact
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-bff-verification
+          path: artifacts/verification/pact-provider/
+          if-no-files-found: warn
+          retention-days: 14
+
+  publish-pact-verification:
+    if: >-
+      always() && !cancelled() && github.event_name == 'push' &&
+      github.ref == 'refs/heads/master' && vars.PACT_REGISTRY_URL != '' &&
+      (needs.pact-provider.result == 'success' || needs.pact-provider.result == 'failure')
+    needs: pact-provider
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-bff-verification
+          path: pact-evidence
+      - name: Publish the exact provider result
+        env:
+          PACT_REGISTRY_URL: ${{ vars.PACT_REGISTRY_URL }}
+          PACT_PUBLISHER_TOKEN: ${{ secrets.PACT_PUBLISHER_TOKEN }}
+        run: python3 scripts/pact/publish.py pact-evidence/verification.json web-bff-verification-receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-bff-verification-receipt
+          path: web-bff-verification-receipt.json
+          if-no-files-found: error
+
   quality-gate:
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [build, integration-tests, secret-scan, dependency-review]
+    needs: [build, integration-tests, pact-provider, secret-scan, dependency-review]
     steps:
       - name: Require all mandatory jobs
         env:
           EVENT_NAME: ${{ github.event_name }}
           BUILD: ${{ needs.build.result }}
           INTEGRATION: ${{ needs.integration-tests.result }}
+          PACT_PROVIDER: ${{ needs.pact-provider.result }}
           SECRET_SCAN: ${{ needs.secret-scan.result }}
           DEPENDENCY_REVIEW: ${{ needs.dependency-review.result }}
         run: |
-          for job in BUILD INTEGRATION SECRET_SCAN; do
+          for job in BUILD INTEGRATION PACT_PROVIDER SECRET_SCAN; do
             if [[ "${!job}" != success ]]; then
               echo "$job must succeed; actual result: ${!job}" >&2
               exit 1

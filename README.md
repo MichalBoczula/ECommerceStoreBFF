@@ -95,7 +95,7 @@ Run the complete local check from the repository root:
 bash scripts/verify.sh
 ```
 
-It checks shell/Python sources, restores and builds the solution with NuGet Audit, verifies handwritten C# formatting, runs container integration tests, writes TRX and handwritten-code coverage reports, and builds the BFF Docker image. Testcontainers create their own isolated SQL Server, MongoDB replica set and upstream API containers on dynamic ports; the manual Compose stack above is not required for tests. Docker must be running. Local reports are written under `artifacts/verification/` (including `summary.md`). Generated Kiota sources are excluded from the coverage report; `DependencyInjection.cs` remains in its scope. There is no minimum coverage percentage gate in the current BFF workflow.
+It checks shell/Python sources, restores and builds the solution with NuGet Audit, verifies handwritten C# formatting, runs the [Web registration Pact](docs/web-pact-provider.md) with uv, runs container integration tests, writes TRX and handwritten-code coverage reports, and builds the BFF Docker image. Testcontainers create their own isolated SQL Server, MongoDB replica set and upstream API containers on dynamic ports; the manual Compose stack above is not required for tests. Docker must be running. Local reports are written under `artifacts/verification/` (including `summary.md`). Generated Kiota sources are excluded from the coverage report; `DependencyInjection.cs` remains in its scope. There is no minimum coverage percentage gate in the current BFF workflow.
 
 For one focused integration run:
 
@@ -103,7 +103,7 @@ For one focused integration run:
 dotnet test test/ECommerceStoreBFF.IntegrationTests/ECommerceStoreBFF.IntegrationTests.csproj --configuration Release
 ```
 
-On pull requests and pushes to `master`, [GitHub Actions CI](.github/workflows/ci.yml) runs source/build/format checks, container integration tests, secret scanning and a quality gate. Pull requests also run Dependency Review; on `master` that job is intentionally skipped. Only after the quality gate succeeds does CI build the image, smoke-test `/health`, and scan for fixable HIGH/CRITICAL vulnerabilities with Trivy. The [upstream baseline workflow](.github/workflows/upstream-contracts.yml) checks image readiness and OpenAPI compatibility when upstream contracts or their Compose verification change; it can also be started manually.
+On pull requests and pushes to `master`, [GitHub Actions CI](.github/workflows/ci.yml) runs source/build/format checks, Web Pact verification, container integration tests, secret scanning and a quality gate. Pull requests also run Dependency Review; on `master` that job is intentionally skipped. Only after the quality gate succeeds does CI build the image, smoke-test `/health`, and scan for fixable HIGH/CRITICAL vulnerabilities with Trivy. The [upstream baseline workflow](.github/workflows/upstream-contracts.yml) checks image readiness and OpenAPI compatibility when upstream contracts or their Compose verification change; it can also be started manually.
 
 On a successful `master` run, CI pushes the same scanned image to Docker Hub as `mb0101/ecommerce-store-bff-api:<full commit SHA>` and `mb0101/ecommerce-store-bff-api:latest`, then compares the published digests. It uses GitHub Actions secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`; pull requests never publish. Publishing an image does not deploy it to a runtime. See [ADR-0002](docs/adr/0002-scanned-image-publication.md).
 
