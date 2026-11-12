@@ -19,8 +19,8 @@ def main():
     parser.add_argument("receipt", type=Path)
     args = parser.parse_args()
 
-    if os.environ["GITHUB_EVENT_NAME"] != "push" or os.environ["GITHUB_REF"] != SOURCE_REF:
-        raise ValueError("Registry publication requires a BFF master push.")
+    if os.environ["GITHUB_EVENT_NAME"] not in ("push", "workflow_dispatch") or os.environ["GITHUB_REF"] != SOURCE_REF:
+        raise ValueError("Registry publication requires a push or manual run on BFF master.")
 
     source = json.loads((ROOT / "contracts/pact/web-source.json").read_bytes())
     report = json.loads(args.report.read_bytes())

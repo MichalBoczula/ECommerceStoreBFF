@@ -33,6 +33,10 @@ token for the publisher scoped to `bff`. In Terraform, map
 `bff-ci = ["bff"]` in `pact_publishers` and set its corresponding SHA-256
 in `pact_publisher_token_sha256`.
 
+To retry publication after changing the repository secret, open
+**Actions → CI → Run workflow**, choose `master`, and start the run.
+CI replays the Pact against that commit and publishes the new report.
+
 The publish job confirms the source publication and hashes its registry
 download before posting the result under `web-bff-registration`. The
 `web-bff-verification-receipt` artifact identifies the consumer publication,
