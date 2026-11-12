@@ -109,6 +109,7 @@ On a successful `master` push, CI pushes the same scanned image to Docker Hub as
 
 Use [Run workflow](docs/web-pact-provider.md#registry-publication) on `master` to run CI and retry Pact verification publication.
 The [BFF → Users Pact](docs/users-pact-consumer.md) covers the customer lookup and creation calls used during registration.
+The [BFF → Invoice Pact](docs/invoice-pact-consumer.md) covers the cart lookup and creation calls used during registration.
 
 ## Architecture decisions
 
