@@ -77,6 +77,16 @@ curl -i http://localhost:5137/api/payments/openapi.json
 
 Open the Scalar pages from the route table to browse the four API contracts. Shut down the disposable upstream stack with `docker compose -f docker-compose.upstream.yml down --volumes`; this removes its database data. Without `KEEP_UPSTREAMS=1`, the verification script stops the stack automatically.
 
+## Application telemetry
+
+The BFF exports OpenTelemetry request and HTTP dependency spans when
+`APPLICATIONINSIGHTS_CONNECTION_STRING` is configured. DEV Terraform supplies
+that setting and sets `OTEL_SERVICE_NAME` to `ecommercestore-bff`.
+Health probes are excluded from request tracing.
+To verify the BFF and Orders deployment, call `GET /api/orders/swagger/v1/swagger.json`
+through the BFF. In the shared Log Analytics workspace, the BFF request,
+Orders dependency call and Orders request should share an `OperationId`.
+
 ## Kiota clients and contracts
 
 The four OpenAPI files in `contracts/upstream/` correspond to the image digests in [`manifest.json`](contracts/upstream/manifest.json). The generated clients live under `src/ECommerceStoreBFF.Infrastructure/Generated/{Products,Users,Orders,Payments}`. `Orders` maps to the Invoice API. [`scripts/generate-clients.sh`](scripts/generate-clients.sh) restores the pinned Kiota 1.34.1 tool and regenerates all four clients:

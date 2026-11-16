@@ -1,7 +1,24 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Scalar.AspNetCore;
 using ECommerceStoreBFF.Infrastructure;
+using OpenTelemetry.Instrumentation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var applicationInsightsConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+if (!string.IsNullOrWhiteSpace(applicationInsightsConnectionString))
+{
+    builder.Services.AddOpenTelemetry().UseAzureMonitor(options =>
+    {
+        options.ConnectionString = applicationInsightsConnectionString;
+        options.EnableLiveMetrics = false;
+    });
+    builder.Services.Configure<AspNetCoreTraceInstrumentationOptions>(options =>
+    {
+        options.Filter = context => !context.Request.Path.StartsWithSegments("/health");
+        options.RecordException = true;
+    });
+}
 
 builder.Services.AddCors(options =>
 {
